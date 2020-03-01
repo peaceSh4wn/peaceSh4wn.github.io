@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="P3aceSh4wn's blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="为什么需要使用堆，使用堆空间的原因？ 直到运行时候对象才知道要多大内存，不知道对象生存期多长   数组名作实参而指针变量作形参，函数调用实参传给形参的是？ 数组第一个元素的地址   为什么数组名作为参数会改变数组内容，而其它类型如int却不会改变变量的值？ 因为数组名传递的是指针变量，而如int是传入的一份拷贝数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++面经 100题（21-40）">
+<meta property="og:url" content="http://yoursite.com/2020/02/29/C++%E9%9D%A2%E7%BB%8F%20100%E9%A2%98%EF%BC%8821-40%EF%BC%89/index.html">
+<meta property="og:site_name" content="P3aceSh4wn&#39;s blog">
+<meta property="og:description" content="为什么需要使用堆，使用堆空间的原因？ 直到运行时候对象才知道要多大内存，不知道对象生存期多长   数组名作实参而指针变量作形参，函数调用实参传给形参的是？ 数组第一个元素的地址   为什么数组名作为参数会改变数组内容，而其它类型如int却不会改变变量的值？ 因为数组名传递的是指针变量，而如int是传入的一份拷贝数据">
+<meta property="article:published_time" content="2020-02-29T15:04:45.589Z">
+<meta property="article:modified_time" content="2020-02-29T15:04:45.589Z">
+<meta property="article:author" content="Shawn">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/02/29/C++面经 100题（21-40）/"/>
+
+
+
+
+
+  <title>C++面经 100题（21-40） | P3aceSh4wn's blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">P3aceSh4wn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/29/C++%E9%9D%A2%E7%BB%8F%20100%E9%A2%98%EF%BC%8821-40%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="P3aceSh4wn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">C++面经 100题（21-40）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-29T23:04:45+08:00">
+                2020-02-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o">></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ol start="21">
+<li><h5 id="为什么需要使用堆，使用堆空间的原因？"><a href="#为什么需要使用堆，使用堆空间的原因？" class="headerlink" title="为什么需要使用堆，使用堆空间的原因？"></a>为什么需要使用堆，使用堆空间的原因？</h5><ul>
+<li>直到运行时候对象才知道要多大内存，不知道对象生存期多长</li>
+</ul>
+</li>
+<li><h5 id="数组名作实参而指针变量作形参，函数调用实参传给形参的是？"><a href="#数组名作实参而指针变量作形参，函数调用实参传给形参的是？" class="headerlink" title="数组名作实参而指针变量作形参，函数调用实参传给形参的是？"></a>数组名作实参而指针变量作形参，函数调用实参传给形参的是？</h5><ul>
+<li>数组第一个元素的地址</li>
+</ul>
+</li>
+<li><h5 id="为什么数组名作为参数会改变数组内容，而其它类型如int却不会改变变量的值？"><a href="#为什么数组名作为参数会改变数组内容，而其它类型如int却不会改变变量的值？" class="headerlink" title="为什么数组名作为参数会改变数组内容，而其它类型如int却不会改变变量的值？"></a>为什么数组名作为参数会改变数组内容，而其它类型如int却不会改变变量的值？</h5><ul>
+<li>因为数组名传递的是指针变量，而如<code>int</code>是传入的一份拷贝数据 <a id="more"></a></li>
+</ul>
+</li>
+<li><h5 id="析构函数何虚函数的用法和作用？"><a href="#析构函数何虚函数的用法和作用？" class="headerlink" title="析构函数何虚函数的用法和作用？"></a>析构函数何虚函数的用法和作用？</h5><ul>
+<li><p>析构函数：特殊的类成员函数，没有返回类型、参数，不能随意调用，也没有重载，只有在类对象的生命周期结束时，由系统自动调用，释放内存空间。</p>
+</li>
+<li><p>虚函数：c++多态的一种表现，使用虚函数，，我们能灵活进行动态绑定，花费一定开销</p>
+</li>
+<li><p>析构函数也可能时虚函数吗？</p>
+<ul>
+<li>可能，虚析构函数在如下情况也存在</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> &#123;</span>&#125;; <span class="comment">// A为父类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> :</span> A &#123;&#125;; <span class="comment">// B为子类</span></span><br><span class="line"></span><br><span class="line">A &amp;a = <span class="keyword">new</span> B(); <span class="comment">// reference class B object</span></span><br><span class="line"><span class="keyword">delete</span> a; <span class="comment">// virtual destructor</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//	这里调用A的析构函数，但是A是B类的引用变量，所以B还有额外的空间没有被销毁，所以继承时，把父类析构函数定义成虚的，防止父类引用关联了子类对象。</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><h5 id="39-091-39-39-39-39-0-39-39-39-39-错误的转义字符为"><a href="#39-091-39-39-39-39-0-39-39-39-39-错误的转义字符为" class="headerlink" title="&#39;\091&#39; &#39;\\&#39;  &#39;\0&#39; &#39;\&#39;&#39; 错误的转义字符为?"></a><code>&#39;\091&#39;</code> <code>&#39;\\&#39;</code>  <code>&#39;\0&#39;</code> <code>&#39;\&#39;&#39;</code> 错误的转义字符为?</h5><ul>
+<li><code>&#39;\091&#39;</code></li>
+<li>使用转义的原因：c语言中键盘中没有办法输入但是又存在这个字符</li>
+<li><code>% &#39;&#39; &quot;&quot;</code>，也可以是三个8进制数<code>（0~7） \023</code>，也可以时两个16进制数<code>（0~f） \af</code></li>
+</ul>
+</li>
+<li><h5 id="如果ClassA定义并实现虚函数int-func-void-，ClassB中也实现该函数，那么上述变量a-gt-func-将调用哪个类里面的函数？如果int-func-void-不是虚函数，情况又如何？why？"><a href="#如果ClassA定义并实现虚函数int-func-void-，ClassB中也实现该函数，那么上述变量a-gt-func-将调用哪个类里面的函数？如果int-func-void-不是虚函数，情况又如何？why？" class="headerlink" title="如果ClassA定义并实现虚函数int func(void)，ClassB中也实现该函数，那么上述变量a-&gt;func()将调用哪个类里面的函数？如果int func(void)不是虚函数，情况又如何？why？"></a>如果<code>ClassA</code>定义并实现虚函数<code>int func(void)</code>，<code>ClassB</code>中也实现该函数，那么上述变量<code>a-&gt;func()</code>将调用哪个类里面的函数？如果<code>int func(void)</code>不是虚函数，情况又如何？why？</h5><ul>
+<li>第一问调用B的</li>
+<li>第二问调用A的</li>
+<li>虚函数的典型应用，虚函数只能借助于指针or引用来达到多态的效果</li>
+</ul>
+</li>
+<li><h5 id="引用和指针有什么区别？"><a href="#引用和指针有什么区别？" class="headerlink" title="引用和指针有什么区别？"></a>引用和指针有什么区别？</h5><ul>
+<li>引用必须被初始化</li>
+<li>引用初始化以后不能被改变，指针可以改变所指对象</li>
+<li>不存在指向空值的引用，存在指向空值的指针</li>
+</ul>
+</li>
+<li><h5 id="如果不使用常量，直接在程序中填写数字或字符串将会有什么麻烦？"><a href="#如果不使用常量，直接在程序中填写数字或字符串将会有什么麻烦？" class="headerlink" title="如果不使用常量，直接在程序中填写数字或字符串将会有什么麻烦？"></a>如果不使用常量，直接在程序中填写数字或字符串将会有什么麻烦？</h5><ul>
+<li>可读性变差</li>
+<li>多处输入相同，易错</li>
+<li>如果要修改则会在很多地方改动，麻烦又易错</li>
+</ul>
+</li>
+<li><h5 id="c-有没有纯虚构造函数？"><a href="#c-有没有纯虚构造函数？" class="headerlink" title="c++有没有纯虚构造函数？"></a>c++有没有纯虚构造函数？</h5><ul>
+<li>构造函数不能为虚函数，构造函数为显式调用</li>
+</ul>
+</li>
+<li><h5 id="重复多次fclose一个打开过一次的FILE-fp指针会有什么结果？"><a href="#重复多次fclose一个打开过一次的FILE-fp指针会有什么结果？" class="headerlink" title="重复多次fclose一个打开过一次的FILE *fp指针会有什么结果？"></a>重复多次<code>fclose</code>一个打开过一次的<code>FILE *fp</code>指针会有什么结果？</h5><ul>
+<li>导致文件描述符结构中指针指向的内存被重复释放，进而导致一些不可预期的异常。</li>
+</ul>
+</li>
+<li><h5 id="重载（overload）、重写（override-也叫“覆盖”）、重定义（redefinition）的区别？"><a href="#重载（overload）、重写（override-也叫“覆盖”）、重定义（redefinition）的区别？" class="headerlink" title="重载（overload）、重写（override 也叫“覆盖”）、重定义（redefinition）的区别？"></a>重载（overload）、重写（override 也叫“覆盖”）、重定义（redefinition）的区别？</h5><ul>
+<li>重载：同一个类中</li>
+<li>重写：继承链中，子类去重新实现父类的同名函数，不能变换函数名、形参类型、个数，返回值无所谓</li>
+<li>重定义：第二种情况中，父类如果不是虚函数，则为子类完全重新实现父类函数</li>
+</ul>
+</li>
+<li><h5 id="c-里面是不是所有动作都是main-引起的？如果不是，请举例"><a href="#c-里面是不是所有动作都是main-引起的？如果不是，请举例" class="headerlink" title="c++里面是不是所有动作都是main()引起的？如果不是，请举例"></a>c++里面是不是所有动作都是<code>main()</code>引起的？如果不是，请举例</h5><ul>
+<li>不一定</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>&#123;</span>&#125;;</span><br><span class="line">A a; <span class="comment">// a的构造函数执行</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 比如上面全局变量的初始化，就不是由main函数引起的</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><h5 id="main函数执行前还会执行什么代码？"><a href="#main函数执行前还会执行什么代码？" class="headerlink" title="main函数执行前还会执行什么代码？"></a>main函数执行前还会执行什么代码？</h5><ul>
+<li>全局对象的构造函数会在main函数之前执行</li>
+</ul>
+</li>
+<li><h5 id="c-中virtual和inline含义分别是什么？"><a href="#c-中virtual和inline含义分别是什么？" class="headerlink" title="c++中virtual和inline含义分别是什么？"></a>c++中<code>virtual</code>和<code>inline</code>含义分别是什么？</h5><ul>
+<li><code>virtual</code>（强制）主要用于声明虚函数，抽象类、纯虚函数、多态</li>
+<li><code>inline</code>声明内联函数</li>
+</ul>
+</li>
+<li><h5 id="const关键字有哪些作用？"><a href="#const关键字有哪些作用？" class="headerlink" title="const关键字有哪些作用？"></a><code>const</code>关键字有哪些作用？</h5><ul>
+<li>总的说：只读，不能改</li>
+<li>欲阻止一个变量被改变</li>
+<li>对指针，可以指定指针本身or指针所指数据为<code>const</code></li>
+<li>修饰形参，表明函数内部不能修改</li>
+<li>修饰类成员函数，有时候必须指定其返回值为<code>const</code>类型，使得其返回值不为”左值”</li>
+</ul>
+</li>
+<li><h5 id="编译中Debug与Release选项是什么含义？"><a href="#编译中Debug与Release选项是什么含义？" class="headerlink" title="编译中Debug与Release选项是什么含义？"></a>编译中Debug与Release选项是什么含义？</h5><ul>
+<li>Debug模式下会有额外信息，同时不做任何优化，主要用于调试/编辑测试阶段</li>
+<li>Release模式下会把运行不相关的信息删掉，速度、文件大小都会有相应优化，用于发布阶段</li>
+</ul>
+</li>
+<li><h5 id="是不是一个父类写了一个virtual函数，如果子类覆盖它的函数不加virtual，也能实现多态？"><a href="#是不是一个父类写了一个virtual函数，如果子类覆盖它的函数不加virtual，也能实现多态？" class="headerlink" title="是不是一个父类写了一个virtual函数，如果子类覆盖它的函数不加virtual，也能实现多态？"></a>是不是一个父类写了一个<code>virtual</code>函数，如果子类覆盖它的函数不加<code>virtual</code>，也能实现多态？</h5><ul>
+<li><code>virtual</code>修饰符会被隐形继承的，<code>virtual</code>可加可不加。子类空间里有父类所有变量（除了static）。</li>
+<li>同一个函数只存在一个实体（<code>inline</code>除外），子类覆盖它的函数不加<code>virtual</code>也能实现多态</li>
+<li>在子类空间中，有父类的私有变量，私有变量不能直接访问</li>
+</ul>
+</li>
+<li><h5 id="下面代码，变量val内存地址位于？"><a href="#下面代码，变量val内存地址位于？" class="headerlink" title="下面代码，变量val内存地址位于？"></a>下面代码，变量val内存地址位于？</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> val;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>已初始化数据段</li>
+</ul>
+</li>
+<li><h5 id="在不用第三方参数情况下，交换两个参数的值"><a href="#在不用第三方参数情况下，交换两个参数的值" class="headerlink" title="在不用第三方参数情况下，交换两个参数的值"></a>在不用第三方参数情况下，交换两个参数的值</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// methed 1</span></span><br><span class="line">a = a + b;</span><br><span class="line">b = a - b;</span><br><span class="line">a = a - b;</span><br><span class="line"></span><br><span class="line"><span class="comment">// method 2</span></span><br><span class="line">a = a ^ b</span><br><span class="line">b = a ^ b</span><br><span class="line">a = a ^ b</span><br></pre></td></tr></table></figure>
+</li>
+<li><h5 id="如何打印出当前源文件文件名以及源文件的当前行号？"><a href="#如何打印出当前源文件文件名以及源文件的当前行号？" class="headerlink" title="如何打印出当前源文件文件名以及源文件的当前行号？"></a>如何打印出当前源文件文件名以及源文件的当前行号？</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cout</span> &lt;&lt; __FILE__;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; __LINE__;</span><br><span class="line"><span class="comment">// 两个系统预定义宏，是由编译器定义</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/29/C++%E9%9D%A2%E7%BB%8F%20100%E9%A2%98%EF%BC%881-20%EF%BC%89/" rel="next" title="C++面经 100题（1-20）">
+                <i class="fa fa-chevron-left"></i> C++面经 100题（1-20）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/02/29/CLion%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="prev" title="CLion环境配置">
+                CLion环境配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Shawn" />
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description">埋骨何须桑梓地，人生无处不青山</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/peaceSh4wn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#为什么需要使用堆，使用堆空间的原因？"><span class="nav-number">1.</span> <span class="nav-text">为什么需要使用堆，使用堆空间的原因？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#数组名作实参而指针变量作形参，函数调用实参传给形参的是？"><span class="nav-number">2.</span> <span class="nav-text">数组名作实参而指针变量作形参，函数调用实参传给形参的是？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#为什么数组名作为参数会改变数组内容，而其它类型如int却不会改变变量的值？"><span class="nav-number">3.</span> <span class="nav-text">为什么数组名作为参数会改变数组内容，而其它类型如int却不会改变变量的值？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#析构函数何虚函数的用法和作用？"><span class="nav-number">4.</span> <span class="nav-text">析构函数何虚函数的用法和作用？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#39-091-39-39-39-39-0-39-39-39-39-错误的转义字符为"><span class="nav-number">5.</span> <span class="nav-text">&#39;\091&#39; &#39;\\&#39;  &#39;\0&#39; &#39;\&#39;&#39; 错误的转义字符为?</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#如果ClassA定义并实现虚函数int-func-void-，ClassB中也实现该函数，那么上述变量a-gt-func-将调用哪个类里面的函数？如果int-func-void-不是虚函数，情况又如何？why？"><span class="nav-number">6.</span> <span class="nav-text">如果ClassA定义并实现虚函数int func(void)，ClassB中也实现该函数，那么上述变量a-&gt;func()将调用哪个类里面的函数？如果int func(void)不是虚函数，情况又如何？why？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#引用和指针有什么区别？"><span class="nav-number">7.</span> <span class="nav-text">引用和指针有什么区别？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#如果不使用常量，直接在程序中填写数字或字符串将会有什么麻烦？"><span class="nav-number">8.</span> <span class="nav-text">如果不使用常量，直接在程序中填写数字或字符串将会有什么麻烦？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#c-有没有纯虚构造函数？"><span class="nav-number">9.</span> <span class="nav-text">c++有没有纯虚构造函数？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#重复多次fclose一个打开过一次的FILE-fp指针会有什么结果？"><span class="nav-number">10.</span> <span class="nav-text">重复多次fclose一个打开过一次的FILE *fp指针会有什么结果？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#重载（overload）、重写（override-也叫“覆盖”）、重定义（redefinition）的区别？"><span class="nav-number">11.</span> <span class="nav-text">重载（overload）、重写（override 也叫“覆盖”）、重定义（redefinition）的区别？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#c-里面是不是所有动作都是main-引起的？如果不是，请举例"><span class="nav-number">12.</span> <span class="nav-text">c++里面是不是所有动作都是main()引起的？如果不是，请举例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#main函数执行前还会执行什么代码？"><span class="nav-number">13.</span> <span class="nav-text">main函数执行前还会执行什么代码？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#c-中virtual和inline含义分别是什么？"><span class="nav-number">14.</span> <span class="nav-text">c++中virtual和inline含义分别是什么？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#const关键字有哪些作用？"><span class="nav-number">15.</span> <span class="nav-text">const关键字有哪些作用？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编译中Debug与Release选项是什么含义？"><span class="nav-number">16.</span> <span class="nav-text">编译中Debug与Release选项是什么含义？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#是不是一个父类写了一个virtual函数，如果子类覆盖它的函数不加virtual，也能实现多态？"><span class="nav-number">17.</span> <span class="nav-text">是不是一个父类写了一个virtual函数，如果子类覆盖它的函数不加virtual，也能实现多态？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#下面代码，变量val内存地址位于？"><span class="nav-number">18.</span> <span class="nav-text">下面代码，变量val内存地址位于？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在不用第三方参数情况下，交换两个参数的值"><span class="nav-number">19.</span> <span class="nav-text">在不用第三方参数情况下，交换两个参数的值</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#如何打印出当前源文件文件名以及源文件的当前行号？"><span class="nav-number">20.</span> <span class="nav-text">如何打印出当前源文件文件名以及源文件的当前行号？</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
