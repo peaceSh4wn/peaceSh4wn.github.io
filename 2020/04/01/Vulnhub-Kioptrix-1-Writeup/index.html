@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Vulnhub," />
+
+
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="P3aceSh4wn's blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Talk is cheap, show me writeup  用到的工具和知识 nmap、searchsploit、enum4linux  靶机下载">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vulnhub Kioptrix 1 Writeup">
+<meta property="og:url" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/index.html">
+<meta property="og:site_name" content="P3aceSh4wn&#39;s blog">
+<meta property="og:description" content="Talk is cheap, show me writeup  用到的工具和知识 nmap、searchsploit、enum4linux  靶机下载">
+<meta property="og:image" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/1.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/2.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/3.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/4.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/5.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/6.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/7.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/10.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/11.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/13.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/14.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/8.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/9.png">
+<meta property="article:published_time" content="2020-04-01T03:36:36.000Z">
+<meta property="article:modified_time" content="2020-04-01T08:47:12.814Z">
+<meta property="article:author" content="Shawn">
+<meta property="article:tag" content="Vulnhub">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/"/>
+
+
+
+
+
+  <title>Vulnhub Kioptrix 1 Writeup | P3aceSh4wn's blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+ 
+ 
+ <link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+ 
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">P3aceSh4wn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/01/Vulnhub-Kioptrix-1-Writeup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="P3aceSh4wn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vulnhub Kioptrix 1 Writeup</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-01T11:36:36+08:00">
+                2020-04-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%89%93%E9%9D%B6/" itemprop="url" rel="index">
+                    <span itemprop="name">打靶</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/pentest-training/" itemprop="url" rel="index">
+                    <span itemprop="name">pentest training</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o">></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>Talk is cheap, show me writeup</strong></p>
+<blockquote>
+<p><strong>用到的工具和知识</strong></p>
+<p>nmap、searchsploit、enum4linux</p>
+</blockquote>
+<p><a href>靶机下载</a></p>
+<a id="more"></a>
+
+<h2 id="0x01-信息搜集"><a href="#0x01-信息搜集" class="headerlink" title="0x01 信息搜集"></a>0x01 信息搜集</h2><p>nmap探查端口</p>
+<p><img src="/2020/04/01/Vulnhub-Kioptrix-1-Writeup/1.png" alt></p>
+<p>服务</p>
+<p><img src="/2020/04/01/Vulnhub-Kioptrix-1-Writeup/2.png" alt></p>
+<p>操作系统、脚本等扫描</p>
+<p><img src="/2020/04/01/Vulnhub-Kioptrix-1-Writeup/3.png" alt></p>
+<p><img src="/2020/04/01/Vulnhub-Kioptrix-1-Writeup/4.png" alt></p>
+<p>可见有http、samba等</p>
+<p>访问一下网页</p>
+<p><img src="/2020/04/01/Vulnhub-Kioptrix-1-Writeup/5.png" alt></p>
+<p>dirb扫描</p>
+<p><img src="/2020/04/01/Vulnhub-Kioptrix-1-Writeup/6.png" alt></p>
+<p>nikto扫描</p>
+<p><img src="/2020/04/01/Vulnhub-Kioptrix-1-Writeup/7.png" alt></p>
+<p>enum4linux扫描（略多）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br></pre></td><td class="code"><pre><span class="line">root@kali:~# enum4linux -a 192.168.0.103</span><br><span class="line">Starting enum4linux v0.8.9 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Wed Apr  1 15:08:27 2020</span><br><span class="line"></span><br><span class="line"> ==========================</span><br><span class="line">|    Target Information    |</span><br><span class="line"> ==========================</span><br><span class="line">Target ........... 192.168.0.103</span><br><span class="line">RID Range ........ 500-550,1000-1050</span><br><span class="line">Username ......... ''</span><br><span class="line">Password ......... ''</span><br><span class="line">Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> =====================================================</span><br><span class="line">|    Enumerating Workgroup/Domain on 192.168.0.103    |</span><br><span class="line"> =====================================================</span><br><span class="line">[+] Got domain/workgroup name: MYGROUP</span><br><span class="line"></span><br><span class="line"> =============================================</span><br><span class="line">|    Nbtstat Information for 192.168.0.103    |</span><br><span class="line"> =============================================</span><br><span class="line">Looking up status of 192.168.0.103</span><br><span class="line">        KIOPTRIX        &lt;00&gt; -         B &lt;ACTIVE&gt;  Workstation Service</span><br><span class="line">        KIOPTRIX        &lt;03&gt; -         B &lt;ACTIVE&gt;  Messenger Service</span><br><span class="line">        KIOPTRIX        &lt;20&gt; -         B &lt;ACTIVE&gt;  File Server Service</span><br><span class="line">        ..__MSBROWSE__. &lt;01&gt; - &lt;GROUP&gt; B &lt;ACTIVE&gt;  Master Browser</span><br><span class="line">        MYGROUP         &lt;00&gt; - &lt;GROUP&gt; B &lt;ACTIVE&gt;  Domain/Workgroup Name</span><br><span class="line">        MYGROUP         &lt;1d&gt; -         B &lt;ACTIVE&gt;  Master Browser</span><br><span class="line">        MYGROUP         &lt;1e&gt; - &lt;GROUP&gt; B &lt;ACTIVE&gt;  Browser Service Elections</span><br><span class="line"></span><br><span class="line">        MAC Address = 00-00-00-00-00-00</span><br><span class="line"></span><br><span class="line"> ======================================</span><br><span class="line">|    Session Check on 192.168.0.103    |</span><br><span class="line"> ======================================</span><br><span class="line">[+] Server 192.168.0.103 allows sessions using username '', password ''</span><br><span class="line"></span><br><span class="line"> ============================================</span><br><span class="line">|    Getting domain SID for 192.168.0.103    |</span><br><span class="line"> ============================================</span><br><span class="line">Domain Name: MYGROUP</span><br><span class="line">Domain Sid: (NULL SID)</span><br><span class="line">[+] Can't determine if host is part of domain or part of a workgroup</span><br><span class="line"></span><br><span class="line"> =======================================</span><br><span class="line">|    OS information on 192.168.0.103    |</span><br><span class="line"> =======================================</span><br><span class="line">Use of uninitialized value $os_info in concatenation (.) or string at ./enum4linux.pl line 464.</span><br><span class="line">[+] Got OS info for 192.168.0.103 from smbclient:</span><br><span class="line">[+] Got OS info for 192.168.0.103 from srvinfo:</span><br><span class="line">        KIOPTRIX       Wk Sv PrQ Unx NT SNT Samba Server</span><br><span class="line">        platform_id     :       500</span><br><span class="line">        os version      :       4.5</span><br><span class="line">        server type     :       0x9a03</span><br><span class="line"></span><br><span class="line"> ==============================</span><br><span class="line">|    Users on 192.168.0.103    |</span><br><span class="line"> ==============================</span><br><span class="line">Use of uninitialized value $users in print at ./enum4linux.pl line 874.</span><br><span class="line">Use of uninitialized value $users in pattern match (m//) at ./enum4linux.pl line 877.</span><br><span class="line"></span><br><span class="line">Use of uninitialized value $users in print at ./enum4linux.pl line 888.</span><br><span class="line">Use of uninitialized value $users in pattern match (m//) at ./enum4linux.pl line 890.</span><br><span class="line"></span><br><span class="line"> ==========================================</span><br><span class="line">|    Share Enumeration on 192.168.0.103    |</span><br><span class="line"> ==========================================</span><br><span class="line"></span><br><span class="line">        Sharename       Type      Comment</span><br><span class="line">        ---------       ----      -------</span><br><span class="line">        IPC$            IPC       IPC Service (Samba Server)</span><br><span class="line">        ADMIN$          IPC       IPC Service (Samba Server)</span><br><span class="line">Reconnecting with SMB1 for workgroup listing.</span><br><span class="line"></span><br><span class="line">        Server               Comment</span><br><span class="line">        ---------            -------</span><br><span class="line">        KIOPTRIX             Samba Server</span><br><span class="line"></span><br><span class="line">        Workgroup            Master</span><br><span class="line">        ---------            -------</span><br><span class="line">        MYGROUP              KIOPTRIX</span><br><span class="line"></span><br><span class="line">[+] Attempting to map shares on 192.168.0.103</span><br><span class="line">//192.168.0.103/IPC$    [E] Can't understand response:</span><br><span class="line">NT_STATUS_NETWORK_ACCESS_DENIED listing \*</span><br><span class="line">//192.168.0.103/ADMIN$  [E] Can't understand response:</span><br><span class="line">tree connect failed: NT_STATUS_WRONG_PASSWORD</span><br><span class="line"></span><br><span class="line"> =====================================================</span><br><span class="line">|    Password Policy Information for 192.168.0.103    |</span><br><span class="line"> =====================================================</span><br><span class="line">[E] Unexpected error from polenum:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[+] Attaching to 192.168.0.103 using a NULL share</span><br><span class="line"></span><br><span class="line">[+] Trying protocol 445/SMB...</span><br><span class="line"></span><br><span class="line">        [!] Protocol failed: [Errno Connection error (192.168.0.103:445)] [Errno 111] Connection refused</span><br><span class="line"></span><br><span class="line">[+] Trying protocol 139/SMB...</span><br><span class="line"></span><br><span class="line">        [!] Protocol failed: SMB SessionError: 0x5</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[+] Retieved partial password policy with rpcclient:</span><br><span class="line"></span><br><span class="line">Password Complexity: Disabled</span><br><span class="line">Minimum Password Length: 0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> ===============================</span><br><span class="line">|    Groups on 192.168.0.103    |</span><br><span class="line"> ===============================</span><br><span class="line"></span><br><span class="line">[+] Getting builtin groups:</span><br><span class="line">group:[Administrators] rid:[0x220]</span><br><span class="line">group:[Users] rid:[0x221]</span><br><span class="line">group:[Guests] rid:[0x222]</span><br><span class="line">group:[Power Users] rid:[0x223]</span><br><span class="line">group:[Account Operators] rid:[0x224]</span><br><span class="line">group:[System Operators] rid:[0x225]</span><br><span class="line">group:[Print Operators] rid:[0x226]</span><br><span class="line">group:[Backup Operators] rid:[0x227]</span><br><span class="line">group:[Replicator] rid:[0x228]</span><br><span class="line"></span><br><span class="line">[+] Getting builtin group memberships:</span><br><span class="line">Group 'Backup Operators' (RID: 551) has member: Couldn't find group Backup Operators</span><br><span class="line">Group 'Users' (RID: 545) has member: Couldn't find group Users</span><br><span class="line">Group 'Replicator' (RID: 552) has member: Couldn't find group Replicator</span><br><span class="line">Group 'Print Operators' (RID: 550) has member: Couldn't find group Print Operators</span><br><span class="line">Group 'Administrators' (RID: 544) has member: Couldn't find group Administrators</span><br><span class="line">Group 'Account Operators' (RID: 548) has member: Couldn't find group Account Operators</span><br><span class="line">Group 'Guests' (RID: 546) has member: Couldn't find group Guests</span><br><span class="line">Group 'System Operators' (RID: 549) has member: Couldn't find group System Operators</span><br><span class="line">Group 'Power Users' (RID: 547) has member: Couldn't find group Power Users</span><br><span class="line"></span><br><span class="line">[+] Getting local groups:</span><br><span class="line">group:[sys] rid:[0x3ef]</span><br><span class="line">group:[tty] rid:[0x3f3]</span><br><span class="line">group:[disk] rid:[0x3f5]</span><br><span class="line">group:[mem] rid:[0x3f9]</span><br><span class="line">group:[kmem] rid:[0x3fb]</span><br><span class="line">group:[wheel] rid:[0x3fd]</span><br><span class="line">group:[man] rid:[0x407]</span><br><span class="line">group:[dip] rid:[0x439]</span><br><span class="line">group:[lock] rid:[0x455]</span><br><span class="line">group:[users] rid:[0x4b1]</span><br><span class="line">group:[slocate] rid:[0x413]</span><br><span class="line">group:[floppy] rid:[0x40f]</span><br><span class="line">group:[utmp] rid:[0x415]</span><br><span class="line"></span><br><span class="line">[+] Getting local group memberships:</span><br><span class="line"></span><br><span class="line">[+] Getting domain groups:</span><br><span class="line">group:[Domain Admins] rid:[0x200]</span><br><span class="line">group:[Domain Users] rid:[0x201]</span><br><span class="line"></span><br><span class="line">[+] Getting domain group memberships:</span><br><span class="line">Group 'Domain Admins' (RID: 512) has member: Couldn't find group Domain Admins</span><br><span class="line">Group 'Domain Users' (RID: 513) has member: Couldn't find group Domain Users</span><br><span class="line"></span><br><span class="line"> ========================================================================</span><br><span class="line">|    Users on 192.168.0.103 via RID cycling (RIDS: 500-550,1000-1050)    |</span><br><span class="line"> ========================================================================</span><br><span class="line">[I] Found new SID: S-1-5-21-4157223341-3243572438-1405127623</span><br><span class="line">[+] Enumerating users using SID S-1-5-21-4157223341-3243572438-1405127623 and logon username '', password ''</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-500 KIOPTRIX\</span><br><span class="line"> (0)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-501 KIOPTRIX\ (0)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-502 KIOPTRIX\unix_group.2147483399 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-503 KIOPTRIX\unix_group.2147483399 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-504 KIOPTRIX\unix_group.2147483400 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-505 KIOPTRIX\unix_group.2147483400 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-506 KIOPTRIX\unix_group.2147483401 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-507 KIOPTRIX\unix_group.2147483401 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-508 KIOPTRIX\unix_group.2147483402 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-509 KIOPTRIX\unix_group.2147483402 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-510 KIOPTRIX\unix_group.2147483403 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-511 KIOPTRIX\unix_group.2147483403 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-512 KIOPTRIX\Domain Admins (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-513 KIOPTRIX\Domain Users (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-514 KIOPTRIX\Domain Guests (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-515 KIOPTRIX\unix_group.2147483405 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-516 KIOPTRIX\unix_group.2147483406 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-517 KIOPTRIX\unix_group.2147483406 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-518 KIOPTRIX\unix_group.2147483407 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-519 KIOPTRIX\unix_group.2147483407 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-520 KIOPTRIX\unix_group.2147483408 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-521 KIOPTRIX\unix_group.2147483408 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-522 KIOPTRIX\unix_group.2147483409 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-523 KIOPTRIX\unix_group.2147483409 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-524 KIOPTRIX\unix_group.2147483410 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-525 KIOPTRIX\unix_group.2147483410 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-526 KIOPTRIX\unix_group.2147483411 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-527 KIOPTRIX\unix_group.2147483411 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-528 KIOPTRIX\unix_group.2147483412 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-529 KIOPTRIX\unix_group.2147483412 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-530 KIOPTRIX\unix_group.2147483413 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-531 KIOPTRIX\unix_group.2147483413 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-532 KIOPTRIX\unix_group.2147483414 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-533 KIOPTRIX\unix_group.2147483414 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-534 KIOPTRIX\unix_group.2147483415 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-535 KIOPTRIX\unix_group.2147483415 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-536 KIOPTRIX\unix_group.2147483416 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-537 KIOPTRIX\unix_group.2147483416 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-538 KIOPTRIX\unix_group.2147483417 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-539 KIOPTRIX\unix_group.2147483417 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-540 KIOPTRIX\unix_group.2147483418 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-541 KIOPTRIX\unix_group.2147483418 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-542 KIOPTRIX\unix_group.2147483419 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-543 KIOPTRIX\unix_group.2147483419 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-544 KIOPTRIX\unix_group.2147483420 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-545 KIOPTRIX\unix_group.2147483420 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-546 KIOPTRIX\unix_group.2147483421 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-547 KIOPTRIX\unix_group.2147483421 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-548 KIOPTRIX\unix_group.2147483422 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-549 KIOPTRIX\unix_group.2147483422 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-550 KIOPTRIX\unix_group.2147483423 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1000 KIOPTRIX\root (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1001 KIOPTRIX\root (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1002 KIOPTRIX\bin (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1003 KIOPTRIX\bin (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1004 KIOPTRIX\daemon (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1005 KIOPTRIX\daemon (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1006 KIOPTRIX\adm (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1007 KIOPTRIX\sys (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1008 KIOPTRIX\lp (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1009 KIOPTRIX\adm (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1010 KIOPTRIX\sync (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1011 KIOPTRIX\tty (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1012 KIOPTRIX\shutdown (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1013 KIOPTRIX\disk (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1014 KIOPTRIX\halt (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1015 KIOPTRIX\lp (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1016 KIOPTRIX\mail (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1017 KIOPTRIX\mem (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1018 KIOPTRIX\news (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1019 KIOPTRIX\kmem (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1020 KIOPTRIX\uucp (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1021 KIOPTRIX\wheel (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1022 KIOPTRIX\operator (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1023 KIOPTRIX\unix_group.11 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1024 KIOPTRIX\games (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1025 KIOPTRIX\mail (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1026 KIOPTRIX\gopher (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1027 KIOPTRIX\news (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1028 KIOPTRIX\ftp (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1029 KIOPTRIX\uucp (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1030 KIOPTRIX\unix_user.15 (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1031 KIOPTRIX\man (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1032 KIOPTRIX\unix_user.16 (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1033 KIOPTRIX\unix_group.16 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1034 KIOPTRIX\unix_user.17 (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1035 KIOPTRIX\unix_group.17 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1036 KIOPTRIX\unix_user.18 (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1037 KIOPTRIX\unix_group.18 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1038 KIOPTRIX\unix_user.19 (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1039 KIOPTRIX\floppy (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1040 KIOPTRIX\unix_user.20 (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1041 KIOPTRIX\games (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1042 KIOPTRIX\unix_user.21 (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1043 KIOPTRIX\slocate (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1044 KIOPTRIX\unix_user.22 (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1045 KIOPTRIX\utmp (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1046 KIOPTRIX\squid (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1047 KIOPTRIX\squid (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1048 KIOPTRIX\unix_user.24 (Local User)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1049 KIOPTRIX\unix_group.24 (Local Group)</span><br><span class="line">S-1-5-21-4157223341-3243572438-1405127623-1050 KIOPTRIX\unix_user.25 (Local User)</span><br><span class="line"></span><br><span class="line"> ==============================================</span><br><span class="line">|    Getting printer info for 192.168.0.103    |</span><br><span class="line"> ==============================================</span><br><span class="line">No printers returned.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">enum4linux complete on Wed Apr  1 15:08:38 2020</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x02-漏洞挖掘与利用"><a href="#0x02-漏洞挖掘与利用" class="headerlink" title="0x02 漏洞挖掘与利用"></a>0x02 漏洞挖掘与利用</h2><p>进入网页之后一番查找，并无建设性的信息出现，这么来看就是需要凭借之前的扫描信息判断漏洞</p>
+<ul>
+<li>samba</li>
+</ul>
+<p><img src="/2020/04/01/Vulnhub-Kioptrix-1-Writeup/10.png" alt></p>
+<p>复制到文件夹下，编译，查看使用方式</p>
+<p><img src="/2020/04/01/Vulnhub-Kioptrix-1-Writeup/11.png" alt></p>
+<p>源代码内使用方式</p>
+<p><img src="/2020/04/01/Vulnhub-Kioptrix-1-Writeup/13.png" alt></p>
+<p>按照要求运行，get root！</p>
+<p><img src="/2020/04/01/Vulnhub-Kioptrix-1-Writeup/14.png" alt></p>
+<ul>
+<li>mod_ssl</li>
+</ul>
+<p><img src="/2020/04/01/Vulnhub-Kioptrix-1-Writeup/8.png" alt></p>
+<p>复制到文件夹下，编译报错</p>
+<p><img src="/2020/04/01/Vulnhub-Kioptrix-1-Writeup/9.png" alt></p>
+<h2 id><a href="#" class="headerlink" title></a></h2><h2 id="0x03-总结"><a href="#0x03-总结" class="headerlink" title="0x03 总结"></a>0x03 总结</h2><ul>
+<li>mod_ssl</li>
+</ul>
+<ul>
+<li>samba</li>
+<li>这篇说实话有点奇怪，enum4linux居然没有扫描出东西，我和他们的版本差在什么地方啊？？</li>
+</ul>
+<h2 id="0x04-参考资源"><a href="#0x04-参考资源" class="headerlink" title="0x04 参考资源"></a>0x04 参考资源</h2><p><a href="https://blog.csdn.net/weixin_44214107/article/details/102866431" target="_blank" rel="noopener">Kioptrix: Level 1-Walkthrough</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Vulnhub/" rel="tag"><i class="fa fa-tag"></i> Vulnhub</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/14/Vulnhub-Sick0s1-1-Writeup/" rel="next" title="Vulnhub Sick0s1.1 Writeup">
+                <i class="fa fa-chevron-left"></i> Vulnhub Sick0s1.1 Writeup
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Shawn" />
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description">Learn it & Try harder</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/peaceSh4wn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/testyouname22" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+            </div>
+          
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-信息搜集"><span class="nav-number">1.</span> <span class="nav-text">0x01 信息搜集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-漏洞挖掘与利用"><span class="nav-number">2.</span> <span class="nav-text">0x02 漏洞挖掘与利用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-总结"><span class="nav-number">4.</span> <span class="nav-text">0x03 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-参考资源"><span class="nav-number">5.</span> <span class="nav-text">0x04 参考资源</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+  <link rel="stylesheet" href="/dist/APlayer.min.css">
+  <div id="aplayer"></div>
+  <script type="text/javascript" src="/dist/APlayer.min.js"></script>
+  <script type="text/javascript" src="/dist/music.js"></script>
+  
+</body>
+</html>

