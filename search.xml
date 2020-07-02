@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>提高你源码阅读效率的7种方式</title>
+    <url>/2020/04/18/%E6%8F%90%E9%AB%98%E4%BD%A0%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E6%95%88%E7%8E%87%E7%9A%847%E7%A7%8D%E6%96%B9%E5%BC%8F/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><a href="https://dzone.com/articles/10-tips-how-to-improve-the-readability-of-your-sof?fromrel=true" target="_blank">10 Tips for Improving the Readability of Your Code</a></p>
+<p><a href="https://dzone.com/articles/7-ways-to-improve-your-code-reading-skill" target="_blank" rel="noopener">7 Ways to Improve Your Code Reading Skills</a></p>
+]]></content>
+      <categories>
+        <category>每日翻译</category>
+      </categories>
+      <tags>
+        <tag>lil tips</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Vulnhub Kioptrix 1 Writeup</title>
     <url>/2020/04/01/Vulnhub-Kioptrix-1-Writeup/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>Talk is cheap, show me writeup</strong></p>
@@ -891,38 +904,37 @@
     <title>docker入门解析</title>
     <url>/2020/02/29/docker%E5%85%A5%E9%97%A8%E8%A7%A3%E6%9E%90/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="docker入门解析"><a href="#docker入门解析" class="headerlink" title="docker入门解析"></a>docker入门解析</h1><p>最近在docker上搭建了部分漏洞实战平台，感觉docker这玩意很好使，所以学习一波</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">docker ps 查看运行中的容器</span><br><span class="line">docker images 查看拉取的镜像</span><br><span class="line">docker search nginx 搜索nginx镜像</span><br><span class="line">docker pull [<span class="type">Docker</span> <span class="type">Registry</span>地址]&lt;仓库名&gt;:&lt;标签&gt; 拉取镜像</span><br><span class="line">docker start/restart/stop [<span class="type">container</span> <span class="type">ID</span>] 启动/重启/停止容器（可以直接停止吗）</span><br><span class="line">docker exect <span class="literal">-it</span> [<span class="type">container</span> <span class="type">ID</span>] /bin/bash 进入到容器中操作</span><br><span class="line">docker rmi [<span class="type">image</span> <span class="type">ID</span>] 删除本地下载的镜像</span><br><span class="line">docker logs [<span class="type">container</span> <span class="type">ID</span>] 查看容器日志</span><br></pre></td></tr></table></figure>
+<h2 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker ps # 查看运行中的容器</span><br><span class="line">docker images # 查看拉取的镜像</span><br><span class="line">docker search nginx # 搜索nginx镜像</span><br><span class="line">docker pull [Docker Registry地址]&lt;仓库名&gt;:&lt;标签&gt; # 拉取镜像</span><br><span class="line">docker start/restart/stop [container ID] # 启动/重启/停止容器（可以直接停止吗）</span><br><span class="line">docker exec -it [container ID] /bin/bash # 进入到容器中操作</span><br><span class="line">docker rm $(docker ps -aq) # 删除所有容器</span><br><span class="line">docker rmi [image ID] # 删除本地下载的镜像</span><br><span class="line">docker rmi $(docker images -q) # 删除所有镜像</span><br><span class="line">docker logs [container ID] # 查看容器日志</span><br></pre></td></tr></table></figure>
 
 <a id="more"></a>
 
 <p>docker-compose up</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker-compose up [options] [--scale SERVICE=NUM...] [SERVICE...]</span><br><span class="line">选项包括：</span><br><span class="line">-d # 在后台运行服务容器</span><br><span class="line">-no-color 不是有颜色来区分不同的服务的控制输出</span><br><span class="line">-no-deps 不启动服务所链接的容器</span><br><span class="line">--force-recreate 强制重新创建容器，不能与-no-recreate同时使用</span><br><span class="line">–no-recreate 如果容器已经存在，则不重新创建，不能与–force-recreate同时使用</span><br><span class="line">–no-build 不自动构建缺失的服务镜像</span><br><span class="line">–build 在启动容器前构建服务镜像</span><br><span class="line">–abort-on-container-exit 停止所有容器，如果任何一个容器被停止，不能与-d同时使用</span><br><span class="line">-t, –timeout TIMEOUT 停止容器时候的超时（默认为10秒）</span><br><span class="line">–remove-orphans 删除服务中没有在compose文件中定义的容器</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker-compose up [options] [--scale SERVICE=NUM...] [SERVICE...]</span><br><span class="line">选项包括：</span><br><span class="line">-d # 在后台运行服务容器</span><br><span class="line">-no-color # 不是由颜色来区分不同的服务的控制输出</span><br><span class="line">-no-deps # 不启动服务所链接的容器</span><br><span class="line">--force-recreate # 强制重新创建容器，不能与-no-recreate同时使用</span><br><span class="line">–no-recreate # 如果容器已经存在，则不重新创建，不能与–force-recreate同时使用</span><br><span class="line">–no-build # 不自动构建缺失的服务镜像</span><br><span class="line">–build # 在启动容器前构建服务镜像</span><br><span class="line">–abort-on-container-exit # 停止所有容器，如果任何一个容器被停止，不能与-d同时使用</span><br><span class="line">-t, –timeout TIMEOUT # 停止容器时候的超时（默认为10秒）</span><br><span class="line">–remove-orphans # 删除服务中没有在compose文件中定义的容器</span><br></pre></td></tr></table></figure>
 
-<h2 id="镜像相关命令"><a href="#镜像相关命令" class="headerlink" title="镜像相关命令"></a>镜像相关命令</h2><h3 id="查看镜像"><a href="#查看镜像" class="headerlink" title="查看镜像"></a>查看镜像</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+<h3 id="镜像相关命令"><a href="#镜像相关命令" class="headerlink" title="镜像相关命令"></a>镜像相关命令</h3><h4 id="查看镜像"><a href="#查看镜像" class="headerlink" title="查看镜像"></a>查看镜像</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
 
 <p>REPOSITORY<br>TAG<br>IMAGE ID<br>CREATED<br>SIZE</p>
 <p><code>以上均存储在/var/lib/docker下</code></p>
-<p>搜索镜像</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker search 镜像名</span><br></pre></td></tr></table></figure>
+<h4 id="搜索镜像"><a href="#搜索镜像" class="headerlink" title="搜索镜像"></a>搜索镜像</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker search 镜像名</span><br></pre></td></tr></table></figure>
 
 <p>NAME</p>
 <p>DESCRIPTION</p>
 <p>STARS</p>
 <p>OFFICIAL</p>
 <p>AUTOMATED：自动构建，表示该镜像由docker hub自动构建流程构建</p>
-<h3 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">dockr pull 镜像名</span><br></pre></td></tr></table></figure>
+<h4 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">dockr pull 镜像名</span><br></pre></td></tr></table></figure>
 
 <p>例如，下载centos镜像</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker pull centos:7</span><br></pre></td></tr></table></figure>
 
-<h3 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rmi 镜像ID</span><br></pre></td></tr></table></figure>
+<h4 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rmi 镜像ID</span><br></pre></td></tr></table></figure>
 
 <p>删除所有镜像</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rmi `docker images -q`</span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="容器相关"><a href="#容器相关" class="headerlink" title="容器相关"></a>容器相关</h2><h3 id="查看容器"><a href="#查看容器" class="headerlink" title="查看容器"></a>查看容器</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
+<h3 id="容器相关"><a href="#容器相关" class="headerlink" title="容器相关"></a>容器相关</h3><h4 id="查看容器"><a href="#查看容器" class="headerlink" title="查看容器"></a>查看容器</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
 
 <p>查看所有容器 </p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
@@ -933,7 +945,7 @@
 <p>查看停止的容器</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker ps -f status=exited</span><br></pre></td></tr></table></figure>
 
-<h3 id="创建与启动容器"><a href="#创建与启动容器" class="headerlink" title="创建与启动容器"></a>创建与启动容器</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run</span><br><span class="line"><span class="meta">#</span><span class="bash"> -i：表示运行容器</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -t：表示启动后进入其命令行。加入这两个参数后，容器创建就能登陆进去。即分配一个伪终端</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> --name：为创建的容器命名</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -v：表示目录映射关系（前者是宿主机目录，后者是映射到宿主机上的目录），可以使用多个-v做多个目录或者文件映射。注意：最好做目录映射，在宿主机上做修改，然后共享到容器上</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -d：创建一个守护式容器在后台运行（这样创建容器后不会自动登陆容器，如果只加-i -t这里两个参数，创建后就会自动进入容器</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -p：端口映射，前者宿主机端口，后者容器内端口，可以用多个-p做多个端口映射</span></span><br></pre></td></tr></table></figure>
+<h4 id="创建与启动容器"><a href="#创建与启动容器" class="headerlink" title="创建与启动容器"></a>创建与启动容器</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run</span><br><span class="line"><span class="meta">#</span><span class="bash"> -i：表示运行容器</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -t：表示启动后进入其命令行。加入这两个参数后，容器创建就能登陆进去。即分配一个伪终端</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> --name：为创建的容器命名</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -v：表示目录映射关系（前者是宿主机目录，后者是映射到宿主机上的目录），可以使用多个-v做多个目录或者文件映射。注意：最好做目录映射，在宿主机上做修改，然后共享到容器上</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -d：创建一个守护式容器在后台运行（这样创建容器后不会自动登陆容器，如果只加-i -t这里两个参数，创建后就会自动进入容器</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -p：端口映射，前者宿主机端口，后者容器内端口，可以用多个-p做多个端口映射</span></span><br></pre></td></tr></table></figure>
 
 <p>（1）交互式方式创建容器</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -it --name=容器名 镜像名：标签 /bin/bash</span><br></pre></td></tr></table></figure>
@@ -948,53 +960,44 @@
 <p>登录守护式容器的方式</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker exec -it 容器名称(or容器id) /bin/bash</span><br></pre></td></tr></table></figure>
 
-<h3 id="停止和启动容器"><a href="#停止和启动容器" class="headerlink" title="停止和启动容器"></a>停止和启动容器</h3><p>停止容器</p>
+<h4 id="停止和启动容器"><a href="#停止和启动容器" class="headerlink" title="停止和启动容器"></a>停止和启动容器</h4><p>停止容器</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker stop 容器名（or容器id）</span><br></pre></td></tr></table></figure>
 
 <p>启动容器</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker start 容器名（or容器id）</span><br></pre></td></tr></table></figure>
 
-<h3 id="文件拷贝"><a href="#文件拷贝" class="headerlink" title="文件拷贝"></a>文件拷贝</h3><p>将文件拷贝到容器中</p>
+<p>文件拷贝</p>
+<p>将文件拷贝到容器中</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker cp 需要拷贝的文件or目录 容器名称：容器目录</span><br></pre></td></tr></table></figure>
 
 <p>文件从容器拷贝除来</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker cp 容器名称：容器目录 需要拷贝的文件or目录</span><br></pre></td></tr></table></figure>
 
-<h3 id="目录挂载"><a href="#目录挂载" class="headerlink" title="目录挂载"></a>目录挂载</h3><p>创建容器时，将宿主机的目录与容器内的目录进行映射，这样我们就可以通过修改宿主机某个目录的文件从而去影响容器</p>
+<h4 id="目录挂载"><a href="#目录挂载" class="headerlink" title="目录挂载"></a>目录挂载</h4><p>创建容器时，将宿主机的目录与容器内的目录进行映射，这样我们就可以通过修改宿主机某个目录的文件从而去影响容器</p>
 <p>创建容器 添加<code>-v</code>参数 后面为 宿主机目录：容器目录</p>
 <p>例如：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -di -v /usr/local/myhtml：/var/local/myhtml --name=mycentos3 centos:7</span><br></pre></td></tr></table></figure>
 
 <p>如果你共享的是多级目录，可能会出现权限不足的提示</p>
 <p>因为centos7中的安全模块selinux把权限禁掉了，我们需要添加参数<code>--priviledged=true</code>来解决挂载的目录没有权限问题</p>
-<h3 id="查看容器ip"><a href="#查看容器ip" class="headerlink" title="查看容器ip"></a>查看容器ip</h3><p>可用以下命令查看容器运行各种参数</p>
+<h4 id="查看容器ip"><a href="#查看容器ip" class="headerlink" title="查看容器ip"></a>查看容器ip</h4><p>可用以下命令查看容器运行各种参数</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker inspect 容器名称（容器id）</span><br></pre></td></tr></table></figure>
 
 <p>也可以直接执行下面命令输出IP地址</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker inspect --format='&#123;&#123;.Networksettings.IPAddress&#125;&#125;' 容器名称（容器id）</span><br></pre></td></tr></table></figure>
 
-<h3 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker rm 容器名称（容器id）</span><br></pre></td></tr></table></figure>
+<h4 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker rm 容器名称（容器id）</span><br></pre></td></tr></table></figure>
 
 
 
-
-
-<p><a href="https://www.runoob.com/docker/docker-tutorial.html" target="_blank" rel="noopener">菜鸟教程</a></p>
+<h2 id="docker-compose"><a href="#docker-compose" class="headerlink" title="docker compose"></a>docker compose</h2><p><a href="https://www.cnblogs.com/zhujingzhi/p/9786622.html" target="_blank" rel="noopener">docker-compose cnblog</a></p>
+<p><a href="https://www.jianshu.com/p/658911a8cff3" target="_blank" rel="noopener">docker-compose 简书</a></p>
+<p><a href="https://www.runoob.com/docker/docker-compose.html" target="_blank" rel="noopener">docker-compose 菜鸟教程</a></p>
+<h1 id="参考资源"><a href="#参考资源" class="headerlink" title="参考资源"></a>参考资源</h1><p><a href="https://www.runoob.com/docker/docker-tutorial.html" target="_blank" rel="noopener">菜鸟教程</a></p>
 <p><a href="https://www.cnblogs.com/bethal/p/5945015.html" target="_blank" rel="noopener">docker常用命令</a></p>
 <p><a href="https://www.cnblogs.com/minseo/p/11548177.html" target="_blank" rel="noopener">docker-compose</a></p>
 <p><a href="https://www.jianshu.com/p/7893af4976d9" target="_blank" rel="noopener">docker-compose1</a></p>
 <p><a href="https://www.jianshu.com/p/ca1623ac7723" target="_blank" rel="noopener">docker &amp; docker-compose</a></p>
-<p><a href="https://colobu.com/2018/05/15/Stop-and-remove-all-docker-containers-and-images/" target="_blank" rel="noopener">docker停止、删除</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>XXE漏洞原理与实例(待填坑)</title>
-    <url>/2020/02/29/XXE%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E4%BE%8B(%E5%BE%85%E5%A1%AB%E5%9D%91)/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><a href="https://thief.one/2017/06/20/1/" target="_blank" rel="noopener">浅谈xxe</a></p>
-<p><a href="https://blog.csdn.net/qq_40491569/article/details/83066200" target="_blank" rel="noopener">xxe</a></p>
-<p><a href="https://www.cnblogs.com/Eleven-Liu/p/8612821.html" target="_blank" rel="noopener">XXE漏洞原理、演示与防御</a></p>
-<p><a href="https://www.kanxue.com/book-6-109.htm" target="_blank" rel="noopener">xxe原理与案例bwapp</a></p>
-<p><a href="https://bbs.ichunqiu.com/thread-55344-1-1.html" target="_blank" rel="noopener">xxe_webgoat</a></p>
 ]]></content>
   </entry>
   <entry>
