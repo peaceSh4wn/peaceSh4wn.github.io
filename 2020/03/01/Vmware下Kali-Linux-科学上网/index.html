@@ -98,11 +98,14 @@
 <meta property="og:image" content="http://yoursite.com/2020/03/01/Vmware%E4%B8%8BKali-Linux-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/200218ssr7.png">
 <meta property="og:image" content="http://yoursite.com/2020/03/01/Vmware%E4%B8%8BKali-Linux-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/200218ssr8.png">
 <meta property="og:image" content="http://yoursite.com/2020/03/01/Vmware%E4%B8%8BKali-Linux-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/200218ssr9.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/01/Vmware%E4%B8%8BKali-Linux-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/Snipaste_2020-10-29_10-51-03.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/01/Vmware%E4%B8%8BKali-Linux-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/Snipaste_2020-10-29_10-52-57.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/01/Vmware%E4%B8%8BKali-Linux-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/Snipaste_2020-10-29_10-53-59.png">
 <meta property="og:image" content="http://yoursite.com/2020/03/01/Vmware%E4%B8%8BKali-Linux-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/daili.jpg">
 <meta property="og:image" content="http://yoursite.com/2020/03/01/Vmware%E4%B8%8BKali-Linux-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/shoudong.jpg">
 <meta property="og:image" content="http://yoursite.com/2020/03/01/Vmware%E4%B8%8BKali-Linux-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/proof.jpg">
 <meta property="article:published_time" content="2020-03-01T11:27:01.000Z">
-<meta property="article:modified_time" content="2020-03-07T14:03:55.305Z">
+<meta property="article:modified_time" content="2020-10-29T05:01:58.953Z">
 <meta property="article:author" content="Shawn">
 <meta property="article:tag" content="Kali Linux">
 <meta name="twitter:card" content="summary">
@@ -469,6 +472,16 @@
 </ol>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">root@shawn#</span><span class="bash">: wget https://www.google.com</span></span><br><span class="line">--2020-02-18 21:58:33--  http://www.google.com/</span><br><span class="line">正在连接 192.168.0.112:1080... 已连接。</span><br><span class="line">已发出 Proxy 请求，正在等待回应... 200 OK</span><br><span class="line">长度：未指定 [text/html]</span><br><span class="line">正在保存至: “index.html”</span><br><span class="line"></span><br><span class="line">index.html              [  &lt;=&gt;               ]  11.61K  --.-KB/s  用时 1.0s    </span><br><span class="line"></span><br><span class="line">2020-02-18 21:58:36 (12.2 KB/s) - “index.html” 已保存 [11886]</span><br></pre></td></tr></table></figure>
 
+<ol start="4">
+<li>v2ray注意点</li>
+</ol>
+<p>在v2ray中直接开启<code>允许来自局域网连接</code>，然后按照上述配置10808端口后，你会发现还是无法连接，用wget测试terminal报如下错误</p>
+<p><img src="/2020/03/01/Vmware%E4%B8%8BKali-Linux-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/Snipaste_2020-10-29_10-51-03.png" alt></p>
+<p>查看v2ray的日志</p>
+<p><img src="/2020/03/01/Vmware%E4%B8%8BKali-Linux-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/Snipaste_2020-10-29_10-52-57.png" alt></p>
+<p>问题的原因是，v2ray有SOCKS5代理端口和HTTP代理端口，如下图（端口被我改过）</p>
+<p><img src="/2020/03/01/Vmware%E4%B8%8BKali-Linux-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/Snipaste_2020-10-29_10-53-59.png" alt></p>
+<p>注意v2ray需要填写正确端口</p>
 <h2 id="0x03-全局配置"><a href="#0x03-全局配置" class="headerlink" title="0x03 全局配置"></a>0x03 全局配置</h2><p>说到全局配置，当然直接就在kali的网络设置中配置代理</p>
 <p><img src="/2020/03/01/Vmware%E4%B8%8BKali-Linux-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/daili.jpg" alt></p>
 <p>网络设置-&gt;Network Proxy，写入ssr所在主机地址:端口</p>
