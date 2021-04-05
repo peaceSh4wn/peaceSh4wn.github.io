@@ -57,10 +57,10 @@
 </ul>
 <h3 id="0x34-server"><a href="#0x34-server" class="headerlink" title="0x34 server"></a>0x34 server</h3><p>server端的主要逻辑在console.h中</p>
 <p>大体的逻辑结构：先设置端口、超时时间，保存刚才的配置，然后在一个while(1)循环内读取命令or选项</p>
-<p>代码略丑就不放出来，单纯通过堆砌while和SwitchCase完成逻辑</p>
+<p>代码略丑就不放出来，单纯通过堆砌while和SwitchCase完成逻辑，下面是zombie和server的执行效果</p>
 <p><img src="/2021/04/05/AXHR-Ghost%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90/4.png" alt="1617548323790"></p>
 <p><img src="/2021/04/05/AXHR-Ghost%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90/5.png" alt="1617548221882"></p>
-<p>下面用简单的伪代码代替</p>
+<p>下面用简单的伪代码演示server逻辑</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">while(1)</span><br><span class="line">	switch(input)	</span><br><span class="line">        1)  显示所有zombie的ID、IP、Port</span><br><span class="line">			 输入想要继续操作的zombie_id，查看USER、VERSION、AV</span><br><span class="line">			switch(input_a)</span><br><span class="line">			0)  回主界面</span><br><span class="line">			1)  执行命令</span><br><span class="line">			2)  下载和执行程序</span><br><span class="line">			3)  杀死taskmgr开关</span><br><span class="line"></span><br><span class="line">		2)  配置保存，保存刚才设置的端口和web页面中查询的IP</span><br><span class="line">			 保存完后下次会读取配置</span><br><span class="line">		</span><br><span class="line">        3)  刷新，如果zombie断连则数据会从全局容器中删除</span><br><span class="line">        </span><br><span class="line">        4)  最小化</span><br><span class="line">			 选择后我们便可以关闭console，图标会保留在右下角的任务窗口中，双击任务窗口console又会显示</span><br><span class="line"></span><br><span class="line">        5)  退出</span><br></pre></td></tr></table></figure>
 
 
