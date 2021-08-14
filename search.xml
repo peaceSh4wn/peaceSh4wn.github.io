@@ -1,6 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Arm平台Nmap7.8交叉编译</title>
+    <url>/2021/08/14/Arm%E5%B9%B3%E5%8F%B0Nmap7-8%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><blockquote>
+<p>前提：gcc-linaro-5.3.1-2016.05-i686_aarch64-linux-gnu编译链配置完成，CFLAGS、LDFLAGS等关键环境变量已经导入/etc/profile，如下图</p>
+</blockquote>
+<a id="more"></a>
+
+<p><img src="/2021/08/14/Arm%E5%B9%B3%E5%8F%B0Nmap7-8%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/1628413676917.png" alt="1628413676917"></p>
+<ul>
+<li>上面的库和头文件来自arm公版CentOS7，即直接从公版CentOS7中提取库和头文件放到对应的目录下<br>我使用的版本如下：<br><code>Linux localhost.localdomain 4.18.0-193.28.1.el7.aarch64 #1 SMP Wed Oct 21 16:25:35 UTC 2020 aarch64 aarch64 aarch64 GNU/Linux</code></li>
+</ul>
+<h2 id="0x01-查看configure编译需求"><a href="#0x01-查看configure编译需求" class="headerlink" title="0x01 查看configure编译需求"></a>0x01 查看configure编译需求</h2><p>我们需要用到的编译选项</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">--prefix # 指定nmap安装位置</span><br><span class="line">--host # 指定编译链</span><br><span class="line">--with-includes # 指定头文件的搜索目录</span><br><span class="line">--without-zenmap # 关闭zenmap编译</span><br><span class="line">--with-openssl # 链接openssl库</span><br><span class="line">--with-libpcap # 链接libpcap库，用于发包等网络操作</span><br><span class="line">--with-pcre # 链接libpcre库，用于正则处理</span><br></pre></td></tr></table></figure>
+
+<p>arm版本gcc的编译选项</p>
+<p>对照arm环境中的共享对象，我们找到交叉编译环境下的相同共享对象，指定对应的依赖路径，保证无误</p>
+<ul>
+<li>libpcre.so.1.2.6</li>
+<li>libpcap.so.0.8</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./configure --prefix=/nmap --host=aarch64-linux-gnu --with-includes=/home/project/cross_compile_arm/include --with-libssl-prefix=/home/project/cross_compile_arm/lib64 --with-libpcap=/home/project/cross_compile_arm/</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="0x02-报错处理"><a href="#0x02-报错处理" class="headerlink" title="0x02 报错处理"></a>0x02 报错处理</h2><p>按照上述configure选项，我们生成了对应的makefile，最下面的warning能判断，我们没有将openssl和libssh2加入（用不到就不加）</p>
+<p><img src="/2021/08/14/Arm%E5%B9%B3%E5%8F%B0Nmap7-8%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/1628502306278.png" alt="1628502306278"></p>
+<p>执行make，开始编译报如下错误</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">make[2]: Entering directory `/root/nmap-7.80/nping'</span><br><span class="line">aarch64-linux-gnu-g++ -c -I../libdnet-stripped/include -I/home/project/cross_compile_arm/lib/include  -I../nbase -I../nsock/include -g -O2 -Wall  -fno-strict-aliasing   -DHAVE_CONFIG_H -DNPING_NAME=\"Nping\" -DNPING_URL=\"https://nmap.org/nping\" -DNPING_PLATFORM=\"aarch64-unknown-linux-gnu\" -D_FORTIFY_SOURCE=2 ArgParser.cc -o ArgParser.o</span><br><span class="line">In file included from nping.h:145:0,</span><br><span class="line">                 from ArgParser.cc:134:</span><br><span class="line">../libnetutil/netutil.h:142:18: fatal error: pcap.h: No such file or directory</span><br><span class="line">compilation terminated.</span><br><span class="line">make[2]: *** [ArgParser.o] Error 1</span><br><span class="line">make[2]: Leaving directory `/root/nmap-7.80/nping'</span><br><span class="line">make[1]: *** [all] Error 2</span><br><span class="line">make[1]: Leaving directory `/root/nmap-7.80/nping'</span><br><span class="line">make: *** [build-nping] Error 2</span><br></pre></td></tr></table></figure>
+
+<p>发现是路径指定出错，configure生成的makefile会找到我们给出路径的include目录，下面给出修改</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./configure --prefix=/nmap --host=aarch64-linux-gnu --with-includes=/home/project/cross_compile_arm/ --with-libssl-prefix=/home/project/cross_compile_arm/ --with-libpcap=/home/project/cross_compile_arm/</span><br></pre></td></tr></table></figure>
+
+<p>继续make，成功编译</p>
+<h2 id="0x03-最终参数"><a href="#0x03-最终参数" class="headerlink" title="0x03 最终参数"></a>0x03 最终参数</h2><p>最终我们的编译选项</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./configure --prefix=/nmap --host=aarch64-linux-gnu --with-includes=/home/project/cross_compile_arm/ --with-libssl-prefix=/home/project/cross_compile_arm/ --with-libpcap=/home/project/cross_compile_arm/</span><br><span class="line"></span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/14/Arm%E5%B9%B3%E5%8F%B0Nmap7-8%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/1628935167120.png" alt="1628935167120"></p>
+<p>成功编译安装</p>
+]]></content>
+      <categories>
+        <category>东搞西搞</category>
+      </categories>
+      <tags>
+        <tag>工具使用</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Stitch_Codes源码阅读和分析</title>
     <url>/2021/08/14/Stitch-Codes%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><blockquote>
@@ -2102,8 +2149,8 @@
         <category>基础知识</category>
       </categories>
       <tags>
-        <tag>基础知识</tag>
         <tag>工具使用</tag>
+        <tag>基础知识</tag>
       </tags>
   </entry>
   <entry>
@@ -2225,8 +2272,8 @@
         <category>基础知识</category>
       </categories>
       <tags>
-        <tag>基础知识</tag>
         <tag>工具使用</tag>
+        <tag>基础知识</tag>
       </tags>
   </entry>
   <entry>
