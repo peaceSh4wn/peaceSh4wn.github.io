@@ -1,6 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Stitch_Codes源码阅读和分析</title>
+    <url>/2021/08/14/Stitch-Codes%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><blockquote>
+<p>第二篇依然从简单入手，Stitch C2框架（小pupy） 主要使用python2实现，支持Win、Linux、Mac三种平台</p>
+</blockquote>
+<a id="more"></a>
+
+
+<h2 id="0x01-目录结构"><a href="#0x01-目录结构" class="headerlink" title="0x01 目录结构"></a>0x01 目录结构</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">│  main.py # 启动Stitch C2服务器</span><br><span class="line">│</span><br><span class="line">├─Application（该文件夹内文件，按下方排序由上至下存在依赖关系，数字为阅读顺序）</span><br><span class="line">│  │  stitch_utils.py # aes加解密、路径处理、进度条显示、字体颜色、平台判别、命令执行等 1</span><br><span class="line">│  │  stitch_pyld_config.py # 配置读取、设置、保存 2</span><br><span class="line">│  │  stitch_help.py # 帮助信息 3</span><br><span class="line">│  │  stitch_lib.py # 命令处理（主要包含在一个class stitch_commands_library中）4</span><br><span class="line">│  │  stitch_gen.py # payload生成 5 （配合payload_codes.py）</span><br><span class="line">│  │  stitch_lnxshell.py # 三个模块：执行、补全、帮助 6 </span><br><span class="line">│  │  stitch_osxshell.py # 四个模块：执行、osx特有、补全、帮助 6 </span><br><span class="line">│  │  stitch_winshell.py # 四个模块：执行、win特有、补全、帮助 6 </span><br><span class="line">│  │  stitch_cmd.py # 三个模块：执行、补全、帮助（引入所有库）7</span><br><span class="line">│  │</span><br><span class="line">│  └─Stitch_Vars</span><br><span class="line">│          globals.py # 随机密钥生成，枚举值、路径、日志初始化</span><br><span class="line">│          makeself.py # 调用makeself库</span><br><span class="line">│          nsis.py # 脚本安装系统</span><br><span class="line">│          payload_code.py # 很多写好的函数字符串，后期调用组装成payload</span><br><span class="line">│          payload_setup.py # payload list设置icon、name、description</span><br><span class="line">│</span><br><span class="line">├─Cleaner</span><br><span class="line">│      st_cleaner.py # 清除计划任务和防火墙规则</span><br><span class="line">│</span><br><span class="line">├─Configuration</span><br><span class="line">│  │  pyxhook.py # 键盘记录</span><br><span class="line">│  │  vidcap.pyd</span><br><span class="line">│  │</span><br><span class="line">│  ├─creddump # 凭据dump库</span><br><span class="line">│  │      addrspace.py</span><br><span class="line">│  │      COPYING</span><br><span class="line">│  │      hashdump.py</span><br><span class="line">│  │      newobj.py</span><br><span class="line">│  │      obj.py</span><br><span class="line">│  │      rawreg.py</span><br><span class="line">│  │      types.py</span><br><span class="line">│  │</span><br><span class="line">│  └─mss # 跨平台python截屏库</span><br><span class="line">│      │  base.py</span><br><span class="line">│      │  darwin.py</span><br><span class="line">│      │  exception.py</span><br><span class="line">│      │  factory.py</span><br><span class="line">│      │  LICENSE</span><br><span class="line">│      │  linux.py</span><br><span class="line">│      │  windows.py</span><br><span class="line">│      │</span><br><span class="line">│      └─linux</span><br><span class="line">│          │  build.sh</span><br><span class="line">│          │  mss.c</span><br><span class="line">│          ├─32</span><br><span class="line">│          │      libmss.so</span><br><span class="line">│          └─64</span><br><span class="line">│                  libmss.so</span><br><span class="line">│</span><br><span class="line">├─Elevation</span><br><span class="line">│      elevate.py # 提权脚本（并不是真正提权，仅仅是将文件夹内下载器加入防火墙白名单，访问时间设定同系统程序一样）</span><br><span class="line">│      elevatepy2exe.py # 提权脚本转成exe</span><br><span class="line">├─Icons # 图标</span><br><span class="line">├─PyLib # python库，作者实现的各种基础操作（如：关闭杀软、文件下载、注册表操作等）</span><br><span class="line">└─Tools</span><br><span class="line">	│  osx_dev_setup.sh </span><br><span class="line">    │  passwords.txt # 字典</span><br><span class="line">    ├─ImageSnap-v0.2.5 # 基于命令行的抓屏工具</span><br><span class="line">    └─makeself # 打包工具</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="0x02-主要的class"><a href="#0x02-主要的class" class="headerlink" title="0x02 主要的class"></a>0x02 主要的class</h2><p><strong>linux shell</strong></p>
+<p><strong>win shell</strong></p>
+<p><strong>osx shell</strong></p>
+<p>上述的三个类功能基本相同，都是按照以下三个部分来进行编码</p>
+<ol>
+<li><code>do section</code><ul>
+<li>调用st_lib中实际功能，如：命令执行、文件传输、关闭杀软等</li>
+<li>win、osx由于平台原因，存在一些特有函数，比如查询驱动、开启关闭RDP、亮屏息屏等</li>
+</ul>
+</li>
+<li><code>complete section</code><ul>
+<li>命令行 补全模块</li>
+</ul>
+</li>
+<li><code>help section</code><ul>
+<li>函数帮助模块，查看函数的具体作用</li>
+</ul>
+</li>
+</ol>
+<h2 id="0x03-主要函数模块及关系"><a href="#0x03-主要函数模块及关系" class="headerlink" title="0x03 主要函数模块及关系"></a>0x03 主要函数模块及关系</h2><p><img src="/2021/08/14/Stitch-Codes%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90/stitch_framework.png" alt="stitch_framework"></p>
+<ul>
+<li>stitch主模块是cmd，可以通过config模块读取和设置配置，根据不同的平台判断使用其平台的shell模块。</li>
+<li>shell模块依托于lib和help，lib提供功能函数支持（包括第三方库调用），help提供帮助支持，此二者又会使用到util工具函数，进行aes加解密、路径处理、进度条显示、字体颜色、平台判别、命令执行等处理。（util无处不在）</li>
+<li>payload_genearate模块，负责生成payload，主要通过写好的函数字符串拼接，形成python函数文本后，继续打包来完成任务</li>
+</ul>
+<h2 id="0x04-功能设计要点"><a href="#0x04-功能设计要点" class="headerlink" title="0x04 功能设计要点"></a>0x04 功能设计要点</h2><p>下面是作者编写的PyLib，主要就是一个功能函数的集合，对stitch lib提供支持。其中主要的做法有两种，一种是使用系统shell或者python原生的ctypes、os、sys、subprocess、_winreg等库完成系统调用实现功能，另一种是使用powershell进行命令处理。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">askpass.py</span><br><span class="line">avkiller.py # taskkill反病毒软件，鸡肋</span><br><span class="line">avscan_posix.py # 通过进程名称检测反病毒软件</span><br><span class="line">avscan_win.py # 从注册表中找到对应的反病毒软件</span><br><span class="line">cat.py</span><br><span class="line">cd.py # 切换当前目录</span><br><span class="line">chromedump.py</span><br><span class="line">clearev.py # 使用wevtutil清除系统日志</span><br><span class="line">crackpassword.py # 密码爆破</span><br><span class="line">depscan.py # wmic OS get DataExecutionPrevention_SupportPolicy</span><br><span class="line"></span><br><span class="line">displayoff.py # 息屏</span><br><span class="line">displayon.py # 亮屏</span><br><span class="line">download.py </span><br><span class="line">drive_finder.py</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改文件访问、创建、修改时间</span></span><br><span class="line">editAccessed.py</span><br><span class="line">editCreation.py</span><br><span class="line">editModified.py</span><br><span class="line"></span><br><span class="line">disableRDP.py</span><br><span class="line">disableUAC.py</span><br><span class="line">disableWinDef.py</span><br><span class="line">enableRDP.py</span><br><span class="line">enableUAC.py</span><br><span class="line">enableWinDef.py</span><br><span class="line"></span><br><span class="line">environment.py # 获取环境变量，os.environ</span><br><span class="line">fileinfo.py # 获取文件夹大小，a、c、m三个时间</span><br><span class="line"></span><br><span class="line">fwallow.py # 防火墙添加规则，允许程序通过防火墙</span><br><span class="line">fwscan.py # 查看advfirewall状态</span><br><span class="line">fwstatus.py # 显示防火墙状态</span><br><span class="line"></span><br><span class="line">get_path.py</span><br><span class="line">hashdump.py</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用attrib修改文件属性，隐藏、显示文件</span></span><br><span class="line">hide.py</span><br><span class="line">unhide.py </span><br><span class="line"></span><br><span class="line">hostsremove.py # 删除指定host</span><br><span class="line">hostsupdate.py # 添加host</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> KeyLogger控制 (主要操作在keylogger类中)</span></span><br><span class="line">kl_dump.py</span><br><span class="line">kl_start.py</span><br><span class="line">kl_status.py</span><br><span class="line">kl_stop.py</span><br><span class="line">freeze_start.py</span><br><span class="line">freeze_status.py</span><br><span class="line">freeze_stop.py</span><br><span class="line"></span><br><span class="line">location.py # 获取当前地理位置</span><br><span class="line">lockscreen.py # 锁屏 ctypes.windll.user32.LockWorkStation</span><br><span class="line">popup.py # </span><br><span class="line">scanReg.py</span><br><span class="line">screenshot.py </span><br><span class="line">ssh.py </span><br><span class="line">sudo_cmd.py </span><br><span class="line">sysinfo.py # 获取当前时间、操作系统、架构、用户、权限、IP、网络名</span><br><span class="line">uascan.py </span><br><span class="line">upload.py </span><br><span class="line">vmscan.py </span><br><span class="line">webcamList.py </span><br><span class="line">webcamSnap.py </span><br><span class="line">wifikeys.py # 查看wifi明文密码</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="0x05-关键语法及技术"><a href="#0x05-关键语法及技术" class="headerlink" title="0x05 关键语法及技术"></a>0x05 关键语法及技术</h2><ul>
+<li>tab补全功能</li>
+<li>ase加解密</li>
+<li>各种库的使用：键鼠hook</li>
+<li>屏幕抓取</li>
+<li>使用struct库接收结构体，方式是先接收一个int类型的数据长度，之后按照长度来接受数据</li>
+</ul>
+<h2 id="0x06-总结"><a href="#0x06-总结" class="headerlink" title="0x06 总结"></a>0x06 总结</h2><ul>
+<li>总体来说stitch这工具很全，而且做到了跨平台，架构是类似于msf的组件模式加上server+client。各种小细节都封装成了对应的模块，所以看起来分工明确，模块之间的交互也多，缺点就是略糙。作者在发现pupy的存在后就不做开发了，更别说持续打磨，但是红队工具的开发就是需要速度，想像cs那样一个专业红队来开发维护还是少数，一个人的力量依旧有限。</li>
+</ul>
+<ol>
+<li>两种方式进行传输数据长度处理，一种是对于文件和命令的接收均有各自的结束符，另一种是先接受长度然后按照长度接收对应大小的数据</li>
+<li>不同功能组件写成单个py文件方便后期扩展，同时也有利于打包，用户可以挑选想要的功能生成exe后发送到client</li>
+<li>第三方库的大量使用提高开发效率</li>
+</ol>
+<h2 id="0x07-参考资料"><a href="#0x07-参考资料" class="headerlink" title="0x07 参考资料"></a>0x07 参考资料</h2><p><a href="https://github.com/alphaSeclab/awesome-rat?hmsr=joyk.com&utm_source=joyk.com&utm_medium=referral" target="_blank" rel="noopener">[1] awesome rat</a></p>
+<p><a href="https://attack.mitre.org/" target="_blank" rel="noopener">[2] MITRE ATT&amp;CK</a></p>
+]]></content>
+      <categories>
+        <category>Sec Dev</category>
+        <category>Red Team</category>
+        <category>C2</category>
+      </categories>
+      <tags>
+        <tag>安全工具月月读</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>AXHR_Ghost源码阅读和分析</title>
     <url>/2021/04/05/AXHR-Ghost%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><blockquote>
