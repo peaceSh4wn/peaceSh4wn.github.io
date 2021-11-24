@@ -114,7 +114,7 @@
 <h2 id="0x0-总结"><a href="#0x0-总结" class="headerlink" title="0x0 总结"></a>0x0 总结</h2><ol>
 <li><p>Everything is file</p>
 </li>
-<li><p>宏的使用，做到跨平台，Linux系统编程基本操作</p>
+<li><p>宏的使用，做到跨平台，Linux系统编程基本方法</p>
 </li>
 <li><p>主动创建孤儿进程，避免出现僵尸进程</p>
 </li>
