@@ -1,6 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>标准bpf过滤报文 1</title>
+    <url>/2022/05/04/%E6%A0%87%E5%87%86bpf%E8%BF%87%E6%BB%A4%E6%8A%A5%E6%96%87-1/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><blockquote>
+<p>本文将以问题驱动，算是一篇trouble shooting，以解决问题为导向，故不会所有方面都提及。主要讲解我对问题的了解、思考和在实际场景中的工程化解决方法。更深层次的bpf语句使用可能会在下一篇（如果我能研究透彻的话~）</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="0x00-问题背景"><a href="#0x00-问题背景" class="headerlink" title="0x00 问题背景"></a>0x00 问题背景</h2><p>​    去年在suricata中实现了报文的过滤，主要的方式就是在驱动层获取报文后利用libpcap中的几个接口，以标准bpf的形式对报文进行匹配过滤，类似于很多防火墙提供的功能。</p>
+<p>​    今年收到反馈的问题，在某客户环境下无法完成过滤，我远程操作后发现手动在引擎播放攻击流量可以完成过滤，但是在外网实时进行模拟攻击却无法过滤。</p>
+<p>​    产品bpf过滤功能有两种模式，一是简易模式，用户可以配置<code>源目的IP、port，tcp、udp、any协议，vlan id</code>；二是专业模式，完全由用户编写bpf语句。</p>
+<p>​    <strong>下面的报文均为测试构造的报文</strong></p>
+<h2 id="0x01-标准bpf的使用"><a href="#0x01-标准bpf的使用" class="headerlink" title="0x01 标准bpf的使用"></a>0x01 标准bpf的使用</h2><p>​    <a href="https://www.tcpdump.org/manpages/pcap-filter.7.html" target="_blank" rel="noopener"><strong>标准bpf语法</strong></a>，标准bpf语法和wireshark的filter栏中语法不同，前者是后者的子集。wireshark算是将协议变量都解析出来再提供比标准bpf更丰富的搜索，标准bpf更多还是通过偏移来完成过滤。</p>
+<p>常用的关键字（原语）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">type限定符：host、net、port、vlan等。 例如：host 1.1.1.1、net 10.0.0.0/8、port 8080、vlan 1000<br>dir限定符：src、dst。 例如：src host 2.2.2.2、dst port 443<br>proto限定符：ip、icmp、tcp、udp等。 例如：ip proto 17、tcp port 21<br>逻辑运算符：and、or、!（非）。例如：(src host 1.2.3.4 and dst net 192.168.0.0/16) or (!port 80)<br></code></pre></td></tr></table></figure>
+
+<p><a href="https://techdocs.broadcom.com/us/en/symantec-security-software/web-and-network-security/security-analytics/8-1-3/_reference_home/bpf_syntax.html" target="_blank" rel="noopener">BPF Syntax</a></p>
+<h2 id="0x02-基本报文过滤"><a href="#0x02-基本报文过滤" class="headerlink" title="0x02 基本报文过滤"></a>0x02 基本报文过滤</h2><p>​    下面我们主要用tcpdump和对应的报文来完成bpf的测试。<code>-r</code>读取报文，同时要判断bpf解析对不对我们会用到<code>-d</code>选项，来查看字节码。</p>
+<p>先给个示例介绍基本分析方式，测试报文：<a href="test_bpf.pcap">test_bpf.pcap</a></p>
+<blockquote>
+<p>过滤源IP：10.51.15.205，目的IP：222.186.160.66</p>
+</blockquote>
+<p><img src="/2022/05/04/%E6%A0%87%E5%87%86bpf%E8%BF%87%E6%BB%A4%E6%8A%A5%E6%96%87-1/1651672921242.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li><code>tcpdump -r test_bpf.pcap &quot;ip src host 10.51.15.205 and ip dst host 222.186.160.66&quot;</code></li>
+</ul>
+<p><img src="/2022/05/04/%E6%A0%87%E5%87%86bpf%E8%BF%87%E6%BB%A4%E6%8A%A5%E6%96%87-1/1651673082244.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>能看到使用这条bpf语句能过滤出330帧报文，下面我们用<code>-d</code>选项查看字节码</p>
+<ul>
+<li><code>tcpdump -d &quot;ip src host 10.51.15.205 and ip dst host 222.186.160.66&quot;</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">(000) ldh      [12]<br>(001) jeq      #0x800           jt 2    jf 7<br>(002) ld       [26]<br>(003) jeq      #0xa330fcd       jt 4    jf 7<br>(004) ld       [30]<br>(005) jeq      #0xdebaa042      jt 6    jf 7<br>(006) ret      #262144<br>(007) ret      #0<br></code></pre></td></tr></table></figure>
+
+<p>​    通过字节码能够看见bpf经过解释后生成的逻辑语句，帮助我们进一步判断自己的bpf是否编写正确。</p>
+<p>​    偏移默认从ether协议开始。<code>ldh [12]</code>是从<code>ether offset 12</code>读取两个字节，<code>jeq</code>同<code>0x800</code>比较（报文是否为IP协议），相同则跳转到2步骤，不同则跳转到7步骤。如果是IP协议，进入2步骤<code>ld [26]</code>，在<code>ether offset 26</code>读取一个字（IP src host）同<code>10.51.15.205</code>的16进制数比较，其后同理。可看到我们的bpf是合理的，所以能够过滤对应的报文。</p>
+<p>字节码中的部分关键字含义 [<a href="https://www.kernel.org/doc/Documentation/networking/filter.txt" target="_blank" rel="noopener">所有关键字资料</a>]</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">ldb（load byte）读取1字节<br>ldh（load half word）读取2字节<br>ld（load）读取一个字，即4字节<br>jeq（judge equal）判断是否相等<br>jt（jump true）真则跳转到<br>jf（jump false）假则跳转到<br>ret（return）返回<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="0x03-还原问题情景"><a href="#0x03-还原问题情景" class="headerlink" title="0x03 还原问题情景"></a>0x03 还原问题情景</h2><p>​    由于在引擎上对报文重放能够过滤，而在外网对客户模拟渗透无法达到过滤效果，就决定在客户现场进行实时抓包，拿到报文之后再进行报文分析。</p>
+<h3 id="0x31-vlan作祟"><a href="#0x31-vlan作祟" class="headerlink" title="0x31 vlan作祟"></a>0x31 vlan作祟</h3><p>测试报文：<a href="single_vlan.pcap">single_vlan.pcap（模拟用，非用户现场报文）</a></p>
+<p>​    拿到报文之后就发现了报文中存在vlan，这在用户环境很常见。我们也支持vlan配置，不过每次都需要配置vlan id，这种必须要用户对自己环境下的流量进行分析后才能编写bpf语句。</p>
+<p>​    分析完用户报文之后，在web页面配置上vlan id下发bpf语句到引擎，每条独立的bpf语句用<code>or</code>来进行连接，保证过滤逻辑。生成的bpf语句如下：</p>
+<p><code>((vlan 2000) and (ip src host 10.216.143.250)) or ((vlan 2000) and (ip src host 101.35.124.69))</code></p>
+<p>再来看一下我们测试报文，一共15个分组</p>
+<p><img src="/2022/05/04/%E6%A0%87%E5%87%86bpf%E8%BF%87%E6%BB%A4%E6%8A%A5%E6%96%87-1/1651676396060.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>尝试过滤</p>
+<p><img src="/2022/05/04/%E6%A0%87%E5%87%86bpf%E8%BF%87%E6%BB%A4%E6%8A%A5%E6%96%87-1/1651757469315.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>发现仅过滤出13个报文，抓到了所有250-&gt;69的包，但缺少了两个69-&gt;250的包，可以判断在现场也是出现了这样的问题，下面分析字节码：</p>
+<p><code>tcpdump -d &quot;((vlan 2000) and (ip src host 10.216.143.250)) or ((vlan 2000) and (ip src host 101.35.124.69))&quot;</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">(000) ldb      [-4048]<br>(001) jeq      #0x1             jt 2    jf 8 // 判断vlan<br>(002) ldb      [-4052]<br>(003) jeq      #0x7d0           jt 4    jf 8 // 判断vlan id是否为2000<br>(004) ldh      [12]<br>(005) jeq      #0x800           jt 6    jf 8 // 判断是否为IP协议<br>(006) ld       [26]<br>(007) jeq      #0xad88ffa       jt 18   jf 19 // host判断完直接结束？？！！<br>(008) ldh      [12]<br>(009) jeq      #0x8100          jt 11   jf 10 // 判断vlan<br>(010) jeq      #0x9100          jt 11   jf 19 // 判断vlan<br>(011) ldh      [14]<br>(012) and      #0xfff<br>(013) jeq      #0x7d0           jt 14   jf 19 // 判断vlan id是否为2000<br>(014) ldh      [16]<br>(015) jeq      #0x800           jt 16   jf 19 // IP协议<br>(016) ld       [30]<br>(017) jeq      #0x65237c45      jt 18   jf 19 // src host判断<br>(018) ret      #262144<br>(019) ret      #0<br></code></pre></td></tr></table></figure>
+
+<p>从字节码中可以看到，在第一段对于src host的判断中在最终的IP判断后直接跳转结束。这样我们第二段的bpf永远也走不到。经过尝试，调换一二段bpf顺序，靠前的bpf语句段会被过滤。但为什么会这样？</p>
+<h3 id="0x32-括号怎么不起作用"><a href="#0x32-括号怎么不起作用" class="headerlink" title="0x32 括号怎么不起作用"></a>0x32 括号怎么不起作用</h3><p>​    从逻辑上看，我们下发的bpf语句使用<code>or</code>来连接，是准确无误的，在各种编程语言中都能正确地表达含义，但这里最终效果却表明bpf的语义分析似乎不同。于是我的怀疑点转到了括号的优先级上。</p>
+<p>下面的bpf测试用例用于判断括号是否无效</p>
+<ul>
+<li><code>tcpdump -d &quot;ip src host 1.1.1.1 and ip dst host 2.2.2.2 or ip dst host 3.3.3.3&quot;</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">(000) ldh      [12]<br>(001) jeq      #0x800           jt 2    jf 9<br>(002) ld       [26]<br>(003) jeq      #0x1010101       jt 4    jf 6<br>(004) ld       [30]<br>(005) jeq      #0x2020202       jt 8    jf 6<br>(006) ld       [30]<br>(007) jeq      #0x3030303       jt 8    jf 9<br>(008) ret      #262144<br>(009) ret      #0<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>tcpdump -d &quot;ip src host 1.1.1.1 and (ip dst host 2.2.2.2 or ip src host 3.3.3.3)&quot;</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">(000) ldh      [12]<br>(001) jeq      #0x800           jt 2    jf 8<br>(002) ld       [26]<br>(003) jeq      #0x1010101       jt 4    jf 8<br>(004) ld       [30]<br>(005) jeq      #0x2020202       jt 7    jf 6<br>(006) jeq      #0x3030303       jt 7    jf 8<br>(007) ret      #262144<br>(008) ret      #0<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>tcpdump -d &quot;ip src host 1.1.1.1 and ip dst 2.2.2.2 or ip src host 1.1.1.1 and  ip dst host 3.3.3.3&quot;</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">(000) ldh      [12]<br>(001) jeq      #0x800           jt 2    jf 8<br>(002) ld       [26]<br>(003) jeq      #0x1010101       jt 4    jf 8 // 1.1.1.1被合并了<br>(004) ld       [30]<br>(005) jeq      #0x2020202       jt 8    jf 6<br>(006) jeq      #0x3030303       jt 7    jf 8<br>(007) ret      #262144<br>(008) ret      #0<br></code></pre></td></tr></table></figure>
+
+<p>从上面的测试用例看，普通情况下括号并没有失效，而且bpf语义分析后会对相同部分进行简单的合并</p>
+<h3 id="0x33-深入探索"><a href="#0x33-深入探索" class="headerlink" title="0x33 深入探索"></a>0x33 深入探索</h3><p>这时候我们减去部分多余括号，带入vlan关键字再次进行测试</p>
+<ul>
+<li><code>tcpdump -d &quot;(vlan and ip src host 10.216.143.250) or (vlan and ip src host 101.35.124.69)&quot;</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">(000) ldb      [-4048]<br>(001) jeq      #0x1             jt 2    jf 6<br>(002) ldh      [12]<br>(003) jeq      #0x800           jt 4    jf 6<br>(004) ld       [26]<br>(005) jeq      #0xad88ffa       jt 13   jf 14<br>(006) ldh      [12]<br>(007) jeq      #0x8100          jt 9    jf 8<br>(008) jeq      #0x9100          jt 9    jf 14<br>(009) ldh      [16]<br>(010) jeq      #0x800           jt 11   jf 14<br>(011) ld       [30]<br>(012) jeq      #0x65237c45      jt 13   jf 14<br>(013) ret      #262144<br>(014) ret      #0<br></code></pre></td></tr></table></figure>
+
+<p>​    结果还是没变，这种情况下依然没有达到想要的效果，碰到vlan关键字我们的bpf语句都不对劲起来。又经过一番长时间的资料搜索，发现了两篇很有帮助的文章</p>
+<p><a href="https://corelight.com/blog/mixed-vlan-tags-and-bpf-syntax" target="_blank" rel="noopener">[1] Mixed VLAN tags and BPF syntax</a></p>
+<p><a href="https://seclists.org/tcpdump/2011/q3/118" target="_blank" rel="noopener">[2] VLAN BPF filter</a></p>
+<p>​    尤其第二篇，和我碰到的问题几乎相同，它里面给出的解法是自行编写bpf以vlan头来过滤，<code>(ether[12:2]==0x8100) and (ether[14:2]&amp;4095==7 or
+ether[14:2]&amp;4095==10)</code>。但这样给用户的操作难度太大，对bpf没有研究基本写不出来而且很容易写错。</p>
+<h3 id="0x34-再次尝试"><a href="#0x34-再次尝试" class="headerlink" title="0x34 再次尝试"></a>0x34 再次尝试</h3><p>考虑到前面所有的因素，发现一个规律，当vlan存在时，在一旦bpf过滤开始进入一个<code>and</code>段中并匹配上第一个关键字即<code>vlan</code>，那么就会不断匹配下去而不能进入后续的<code>and</code>段，其中有哪一特征不相同就会判断为过滤失败。此时bpf不会进行语义合并操作。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">(vlan and B and D） or （vlan and A and C）<br></code></pre></td></tr></table></figure>
+
+<p>只要报文匹配上了vlan那么后面只会匹配B再匹配D，第二段不会再进入。</p>
+<p>那么我们面对vlan这种情况，想到的办法就是用户操作时在下发至引擎的BPF语句直接合并，即：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">(vlan and B and D） or （vlan and A and C）<br></code></pre></td></tr></table></figure>
+
+<p>合并为</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">(vlan) and ((B and D) or (A and C))<br></code></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>tcpdump  -d &quot;(vlan 2000) and ((ip src host 10.216.143.250) or (ip src host 101.35.124.69))&quot;</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">(000) ldb      [-4048]<br>(001) jeq      #0x1             jt 2    jf 10<br>(002) ldb      [-4052]<br>(003) jeq      #0x7d0           jt 4    jf 10<br>(004) ldh      [12]<br>(005) jeq      #0x800           jt 6    jf 10<br>(006) ld       [26]<br>(007) jeq      #0xad88ffa       jt 9    jf 8<br>(008) jeq      #0x65237c45      jt 9    jf 10<br>(009) ret      #262144<br>(010) ret      #0<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2022/05/04/%E6%A0%87%E5%87%86bpf%E8%BF%87%E6%BB%A4%E6%8A%A5%E6%96%87-1/1651764140453.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>用此方法最终解决了我们当前的问题</p>
+<h2 id="0x04-解决方法"><a href="#0x04-解决方法" class="headerlink" title="0x04 解决方法"></a>0x04 解决方法</h2><p>​    当前问题虽然解决了，但是如果给用户配置<code>vlan id</code>的机会，那么我们在后端合并操作的工作量就会变得大了而且没有必要。这时候考虑到<strong>开发量</strong>、<strong>bpf学习成本</strong>以及<strong>客户可用性</strong>，我们将简易模式中的<code>vlan id</code>修改为下拉框的形式，只能选择0、1、2三层vlan，向用户隐藏<code>vlan id</code>，仅提供层数选择。这样既方便后端按照0、1、2三层vlan对bpf语句进行合并，对用户来说也减小了学习难度提升了易用性。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">(ip src host 1.1.1.1) or // 0层<br>((vlan) and (ip src host 2.2.2.2)) or // 1层<br>((vlan and vlan) and (ip src host 3.3.3.3)) // 2层<br></code></pre></td></tr></table></figure>
+
+<h2 id="0x05-总结"><a href="#0x05-总结" class="headerlink" title="0x05 总结"></a>0x05 总结</h2><ol>
+<li>bpf是单包过滤，想要对流进行过滤就只能使用<code>ip host x.x.x.x</code>的形式处理，不能使用<code>src</code>、<code>dst</code>两个关键字</li>
+<li>字节码里怎么区分src和dst？按照偏移量来区分</li>
+<li>vlan这块有些和常理不符，编写带有vlan的bpf时需要经过分析和测试</li>
+<li>bpf这块的知识很深，时间紧任务重的情况下，我没有选择阅读源码，但也花费大量时间了解相关资料，才解决了问题，朋友们有空可以阅读这块的源码</li>
+<li>提升产品可用性，但保留专业性</li>
+</ol>
+<h2 id="0x06-参考资料"><a href="#0x06-参考资料" class="headerlink" title="0x06 参考资料"></a>0x06 参考资料</h2><p><a href="https://andreaskaris.github.io/blog/networking/bpf-and-tcpdump/" target="_blank" rel="noopener">[1] BPF and tcpdump(useful)</a></p>
+<p><a href="https://en.wikipedia.org/wiki/EtherType" target="_blank" rel="noopener">[2] EtherType</a></p>
+<p><a href="https://aijishu.com/a/1060000000220363" target="_blank" rel="noopener">[3] BPF内部原理</a></p>
+<p><a href="https://christian-rossow.de/articles/tcpdump_filter_mixed_tagged_and_untagged_VLAN_traffic.php" target="_blank" rel="noopener">[4] tell tcpdump to filter mixed tagged and untagged VLAN (IEEE 802.1Q) traffic</a></p>
+<p><a href="https://blog.cloudflare.com/bpf-the-forgotten-bytecode/" target="_blank" rel="noopener">[5] bpf-the-forgotten-bytecode</a></p>
+<p><a href="https://hackmd.io/@sysprog/linux-ebpf" target="_blank" rel="noopener">[6] 透過 eBPF 觀察作業系統行為</a></p>
+<p><a href="https://linux.cn/article-9507-1.html" target="_blank" rel="noopener">[7] 深入理解 BPF：一个阅读清单</a></p>
+<p><a href="https://qmonnet.github.io/whirl-offload/2016/09/01/dive-into-bpf/" target="_blank" rel="noopener">[8] Dive into BPF: a list of reading material</a></p>
+<p><a href="https://taosecurity.blogspot.com/2008/12/bpf-for-ip-or-vlan-traffic.html" target="_blank" rel="noopener">[9] BPF for IP or VLAN Traffic</a></p>
+<p><a href="https://taosecurity.blogspot.com/2004/12/understanding-tcpdumps-d-option-part-2.html" target="_blank" rel="noopener">[10] Understanding Tcpdump’s -d Option, Part 2</a></p>
+<p><a href="https://github.com/iovisor/bpf-docs/blob/master/bpf-internals-1.md" target="_blank" rel="noopener">[11] BPF Internals - I</a></p>
+]]></content>
+      <categories>
+        <category>Trouble Shooting</category>
+        <category>Sec Dev</category>
+      </categories>
+      <tags>
+        <tag>BPF</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Tsh源码阅读和分析</title>
     <url>/2021/11/23/Tsh%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><blockquote>
@@ -111,7 +243,7 @@
 <li>然后使用FD_ISSET，判断事件集合中本次存在事件的标识符具体是哪一个，处理其后续逻辑</li>
 </ul>
 <p><img src="/2021/11/23/Tsh%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90/1637594856912.png" srcset="/img/loading.gif" lazyload alt="select_process"></p>
-<h2 id="0x0-总结"><a href="#0x0-总结" class="headerlink" title="0x0 总结"></a>0x0 总结</h2><ol>
+<h2 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h2><ol>
 <li><p>Everything is file</p>
 </li>
 <li><p>宏的使用，做到跨平台，Linux系统编程基本方法</p>
@@ -129,7 +261,7 @@
 <li><p>存在bug，输入<code>./tshd asdf</code>后台会一直创建进程，最终跑死机器</p>
 </li>
 </ol>
-<h2 id="0x0-参考资料"><a href="#0x0-参考资料" class="headerlink" title="0x0 参考资料"></a>0x0 参考资料</h2><p><a href="https://man7.org/linux/man-pages/man3/termios.3.html" target="_blank" rel="noopener">[1] termios</a></p>
+<h2 id="0x05-参考资料"><a href="#0x05-参考资料" class="headerlink" title="0x05 参考资料"></a>0x05 参考资料</h2><p><a href="https://man7.org/linux/man-pages/man3/termios.3.html" target="_blank" rel="noopener">[1] termios</a></p>
 <p><a href="https://unix.stackexchange.com/questions/43945/whats-the-difference-between-various-term-variables" target="_blank" rel="noopener">[2] What’s the difference between various $TERM variables?</a></p>
 <p><a href="http://www.freeoa.net/osuport/intronix/linux-tty-ptys-console_3316.html" target="_blank" rel="noopener">[3] 理解 Linux 中的 tty、pty、pts、console、terminal</a></p>
 <p><a href="https://askubuntu.com/questions/444880/why-do-i-need-to-run-bin-bash-login" target="_blank" rel="noopener">[4] Why do I need to run “/bin/bash –login”</a></p>
@@ -189,7 +321,7 @@
 <p>成功编译安装</p>
 ]]></content>
       <categories>
-        <category>东搞西搞</category>
+        <category>Trouble Shooting</category>
       </categories>
       <tags>
         <tag>工具使用</tag>
@@ -1405,7 +1537,7 @@
 <p><a href="https://blog.csdn.net/qq_24314631/article/details/100996531" target="_blank" rel="noopener">kali虚拟机通过ssr上网</a></p>
 ]]></content>
       <categories>
-        <category>东搞西搞</category>
+        <category>Trouble Shooting</category>
       </categories>
       <tags>
         <tag>Kali Linux</tag>
