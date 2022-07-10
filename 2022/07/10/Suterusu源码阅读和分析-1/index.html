@@ -1,0 +1,540 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-Hans" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Learn it &amp; Try harder">
+  <meta name="author" content="Shawn">
+  <meta name="keywords" content="">
+  
+  <title>Suterusu源码阅读和分析(1) - P3aceSh4wn&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="P3aceSh4wn's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>peaceSh4wn's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Homepage
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archive
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Category
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Labels
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Homies
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.jpeg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Suterusu源码阅读和分析(1)">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      Shawn
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-07-10 21:48" pubdate>
+        July 10, 2022 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      986 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      12
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Suterusu源码阅读和分析(1)</h1>
+            
+            <div class="markdown-body">
+              <p>一共可以编译6个模块</p>
+<ul>
+<li>keylogger </li>
+<li>unlock 锁屏，必须输入指定密码</li>
+<li>logfile 键盘记录到指定文件</li>
+<li>hookrw 钩住系统读写</li>
+<li>dlexec 事件驱动下载or执行二进制</li>
+<li>icmp 监控含有特殊字节的icmp</li>
+</ul>
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">├── common.h	# 宏、函数声明<br>├── dlexec.c	# 维护下载任务队列<br>├── hookrw.c	# hook到系统读写<br>├── icmp.c		# icmp队列处理<br>├── keylogger.c	# 键盘记录 or 锁屏<br>├── keylog.h	# 键盘宏<br>├── main.c		# mod主逻辑<br>├── module.c	# 阻止后续模块加入<br>├── serve.c		# tcp server，让受害机通过dlexec下载我们的恶意文件<br>├── sock.c		# 命令通道，和rootkit交互<br>└── util.c		# hook函数实现（根基）<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="util"><a href="#util" class="headerlink" title="util"></a>util</h3><p>主要功能：</p>
+<ul>
+<li>定义了系统函数hook结构体，以链表的形式保存</li>
+<li>定义了四个hook操作函数<ul>
+<li>start：hook对应函数，保存至hook结构体</li>
+<li>pause：暂时归还hook，即归还原函数</li>
+<li>resume：重新hook，即再用我们的新函数替换系统函数</li>
+<li>stop：删除当前hook函数，归还原函数</li>
+</ul>
+</li>
+<li>开启/关闭写保护操作（在四个hook操作函数中用到）</li>
+<li>查找当前函数地址（配合main中查询到的symbol_table使用)</li>
+</ul>
+<h4 id="data-struct"><a href="#data-struct" class="headerlink" title="data_struct"></a>data_struct</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sym_hook</span> &#123;</span><br>    <span class="hljs-keyword">void</span> *addr;			<span class="hljs-comment">// 当前函数位置</span><br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span> o_code[HIJACK_SIZE];	<span class="hljs-comment">// original 旧函数汇编</span><br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span> n_code[HIJACK_SIZE];	<span class="hljs-comment">// new 新函数汇编</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list_head</span> <span class="hljs-title">list</span>;</span>				<span class="hljs-comment">// 侵入式链表，让sym_hook形成链表结构</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<h4 id="api"><a href="#api" class="headerlink" title="api"></a>api</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c">write_cr0(<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>)<br>read_cr0()<br>barrier()<br>preempt_enable()<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">list_add</span> <span class="hljs-params">(	struct list_head * <span class="hljs-keyword">new</span>,	struct list_head * head)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">list_del</span> <span class="hljs-params">(struct list_head * entry)</span></span>;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">kallsyms_on_each_symbol</span> <span class="hljs-params">(<span class="hljs-keyword">int</span>(*fn)(<span class="hljs-keyword">void</span> *, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *, struct <span class="hljs-keyword">module</span> *, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>), <span class="hljs-keyword">void</span> *data)</span></span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="module"><a href="#module" class="headerlink" title="module"></a>module</h3><p>主要功能：函数挂入消息通知队列，当有新模块打入时，将新模块的init和exit函数替换为我们的空函数，达到防止后续模块加入的效果</p>
+<h4 id="data-struct-1"><a href="#data-struct-1" class="headerlink" title="data_struct"></a>data_struct</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">notifier_block</span></span><br></code></pre></td></tr></table></figure>
+
+<h4 id="api-1"><a href="#api-1" class="headerlink" title="api"></a>api</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c">register_module_notifier(struct notifier_block *)<br>unregister_module_notifier(struct notifier_block *)<br><br><br>宏DEFINE_SPINLOCK，定义并初始化spinlock<br>  用法：DEFINE_SPINLOCK(TEST);<br><br>spin_lock_irqsave<br>  用法：spin_lock_irqsave(&amp;TEST, flags&lt;<span class="hljs-keyword">long</span> <span class="hljs-keyword">int</span>&gt;);<br>spin_unlock_irqrestore<br>  用法：spin_unlock_irqrestore(&amp;TEST, flags&lt;<span class="hljs-keyword">long</span> <span class="hljs-keyword">int</span>&gt;);<br></code></pre></td></tr></table></figure>
+
+<p><a href="https://learning-kernel.readthedocs.io/en/latest/kernel-notifier.html" target="_blank" rel="noopener">内核通知链</a></p>
+<p><a href="https://blog.csdn.net/yuzaipiaofei/article/details/81813063" target="_blank" rel="noopener">Notifier链分析和使用</a></p>
+<h3 id="dlexec"><a href="#dlexec" class="headerlink" title="dlexec"></a>dlexec</h3><p>主要功能：维护全局工作队列，将文件下载任务添入队列，文件下载后将文件权限改为777，配合icmp模块使用</p>
+<h4 id="data-struct-2"><a href="#data-struct-2" class="headerlink" title="data_struct"></a>data_struct</h4><ul>
+<li>workqueue_struct 工作队列结构体<ul>
+<li>queue_work</li>
+</ul>
+</li>
+<li>work_struct 工作结构体<ul>
+<li>宏INIT_WORK</li>
+</ul>
+</li>
+<li>mm_segment_t<ul>
+<li>此处主要配合<code>get_fs()</code>，<code>set_fs(mm_segment_t)</code>，<code>get_ds()</code>，内核以此来对用户空间的文件进行操作</li>
+</ul>
+</li>
+<li>iovec 即io vector，struct iovec定义了一个向量元素。通常，这个结构用作一个多元素的数组。对于每一个传输的元素，指针成员iov_base指向一个缓冲区，这个缓冲区是存放的是readv所接收的数据或是writev将要发送的数据。成员iov_len在各种情况下分别确定了接收的最大长度以及实际写入的长度。</li>
+<li>msghdr<ul>
+<li><a href="https://blog.csdn.net/xiao666wang/article/details/108119941" target="_blank" rel="noopener">https://blog.csdn.net/xiao666wang/article/details/108119941</a></li>
+<li><a href="https://www.likecs.com/show-305458847.html" target="_blank" rel="noopener">https://www.likecs.com/show-305458847.html</a></li>
+<li><a href="https://blog.csdn.net/weixin_32968239/article/details/116963142" target="_blank" rel="noopener">https://blog.csdn.net/weixin_32968239/article/details/116963142</a></li>
+</ul>
+</li>
+</ul>
+<h4 id="api-2"><a href="#api-2" class="headerlink" title="api"></a>api</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c">create_workqueue()<br>flush_workqueue()<br>destroy_workqueue()<br>   <br>queue_work()<br>    <br>sock_create(AF_INET, SOCK_STREAM, IPPROTO_TCP, struct sock **)<br>inet_stream_connect(struct sock *, struct sockaddr *, <span class="hljs-keyword">int</span> addr_len, <span class="hljs-keyword">int</span> flags)<br>sock_recvmsg(struct sock *, struct msghdr *, <span class="hljs-keyword">size_t</span>, <span class="hljs-keyword">int</span> flags)<br>inet_release(struct sock *)<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="keylogger"><a href="#keylogger" class="headerlink" title="keylogger"></a>keylogger</h3><p>主要功能：锁屏和记录按键</p>
+<p>这里的密码很有趣，<code>音量升键 上箭头 上箭头 音量降键 ??键 ??键</code> x 2</p>
+<h4 id="data-struct-3"><a href="#data-struct-3" class="headerlink" title="data_struct"></a>data_struct</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c">task_struct<br>keyboard_notifier_param<br><span class="hljs-keyword">loff_t</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="api-3"><a href="#api-3" class="headerlink" title="api"></a>api</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs c">register_keyboard_notifier(struct notifier_block *)<br>unregister_keyboard_notifier(struct notifier_block *)<br><br>宏<span class="hljs-function">DECLARE_WAIT_QUEUE_HEAD<br>    <br><span class="hljs-title">wait_event_interruptible</span><span class="hljs-params">()</span><br><span class="hljs-title">wake_up_interruptible</span><span class="hljs-params">()</span><br>vfs_write<br><br>kthread_run<br>kthread_should_stop<br>kthread_stop</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="sock"><a href="#sock" class="headerlink" title="sock"></a>sock</h3><p>主要功能：通过ioctl和mod进行交互，选择不同的接口，传入对应的参数</p>
+<h4 id="data-struct-4"><a href="#data-struct-4" class="headerlink" title="data_struct"></a>data_struct</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ifconf</span></span><br></code></pre></td></tr></table></figure>
+
+<h4 id="api-4"><a href="#api-4" class="headerlink" title="api"></a>api</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ioctl</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> request, ...)</span></span>;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="icmp"><a href="#icmp" class="headerlink" title="icmp"></a>icmp</h3><p>主要功能：通过netfilter判断操作系统接收到的icmp报文，若icmp报文的magic字段同内置相符，则调用dlexec将对应ip和port挂入下载队列，完成文件传输和执行</p>
+<h4 id="data-struct-5"><a href="#data-struct-5" class="headerlink" title="data_struct"></a>data_struct</h4><p><a href="http://staff.ustc.edu.cn/~james/linux/netfilter-4.html" target="_blank" rel="noopener">http://staff.ustc.edu.cn/~james/linux/netfilter-4.html</a></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c">netfilter的钩子操作结构体<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">nf_hook_ops</span><br>&#123;</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list_head</span> <span class="hljs-title">list</span>;</span>					<span class="hljs-comment">//链表成员</span><br>    <span class="hljs-comment">/* User fills in from here down. */</span><br>    nf_hookfn *hook;                        <span class="hljs-comment">//钩子函数指针</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">module</span> *<span class="hljs-title">owner</span>;</span><br>    <span class="hljs-keyword">int</span> pf;                                 <span class="hljs-comment">//协议簇，对于ipv4而言，是PF_INET</span><br>    <span class="hljs-keyword">int</span> hooknum;                            <span class="hljs-comment">//hook类型</span><br>    <span class="hljs-comment">/* Hooks are ordered in ascending priority. */</span><br>    <span class="hljs-keyword">int</span> priority;                           <span class="hljs-comment">//优先级</span><br>&#125;;<br><br>上面的nf_hookfn函数参数如下<br><span class="hljs-function"><span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> <span class="hljs-title">watch_icmp</span> <span class="hljs-params">( <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> hooknum, struct sk_buff *skb, <span class="hljs-keyword">const</span> struct net_device *in, <span class="hljs-keyword">const</span> struct net_device *out, <span class="hljs-keyword">int</span> (*okfn)(struct sk_buff *) )</span></span><br></code></pre></td></tr></table></figure>
+
+<h4 id="api-5"><a href="#api-5" class="headerlink" title="api"></a>api</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c">nf_register_hook<br>nf_unregister_hook<br></code></pre></td></tr></table></figure>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Sec-Dev/">Sec Dev</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Red-Team/">Red Team</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux-Rootkit/">Linux Rootkit</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%AE%89%E5%85%A8%E5%B7%A5%E5%85%B7%E6%9C%88%E6%9C%88%E8%AF%BB/">安全工具月月读</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/08/Linux%E6%96%87%E6%9C%AC%E4%B8%89%E5%89%91%E5%AE%A2/">
+                        <span class="hidden-mobile">Linux文本三剑客</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
