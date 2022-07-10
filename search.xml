@@ -3,7 +3,11 @@
   <entry>
     <title>Suterusu源码阅读和分析(1)</title>
     <url>/2022/07/10/Suterusu%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90-1/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>suterusu是一款跨多个Linux平台的rootkit，打入目标系统后能够完成文件隐藏、进程隐藏、端口隐藏、目录隐藏、文件下载、控制系统读写、远程交互等功能，是初学rootkit的必看材料，附上作者对suterusu的分析<a href="https://poppopret.org/2013/01/07/suterusu-rootkit-inline-kernel-function-hooking-on-x86-and-arm/" target="_blank" rel="noopener">blog</a></p>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><blockquote>
+<p>suterusu是一款跨多个Linux平台的rootkit，打入目标系统后能够完成文件隐藏、进程隐藏、端口隐藏、目录隐藏、文件下载、控制系统读写、远程交互等功能，是初学rootkit的必看材料，附上作者对suterusu的分析<a href="https://poppopret.org/2013/01/07/suterusu-rootkit-inline-kernel-function-hooking-on-x86-and-arm/" target="_blank" rel="noopener">blog</a></p>
+</blockquote>
+<a id="more"></a>
+
 <p>除去主模块之外，还可以选择性编译6个扩展模块</p>
 <ul>
 <li>keylogger </li>
