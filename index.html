@@ -206,16 +206,13 @@
           
             
           
-          一共可以编译6个模块
+          suterusu是一款跨多个Linux平台的rootkit，打入目标系统后能够完成文件隐藏、进程隐藏、端口隐藏、目录隐藏、文件下载、控制系统读写、远程交互等功能，是初学rootkit的必看材料，附上作者对suterusu的分析blog
+除去主模块之外，还可以选择性编译6个扩展模块
 
 keylogger 
 unlock 锁屏，必须输入指定密码
 logfile 键盘记录到指定文件
-hookrw 钩住系统读写
-dlexec 事件驱动下载or执行二进制
-icmp 监控含有特殊字节的icmp
-
-目录结构1234567891011├── common.h	# 宏、函数声明├── dlexec.c	# 维护下载任务队列├── hookrw.c	# hook到系统读写
+hookrw 钩住系
         </a>
       </p>
 
