@@ -17,6 +17,7 @@
 <p><img src="/2022/07/20/Suterusu%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90-2/sys_call_table.png" srcset="/img/loading.gif" lazyload alt="find_sys_call_table"></p>
 <p><img src="/2022/07/20/Suterusu%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90-2/kall.png" srcset="/img/loading.gif" lazyload alt="syscall_table_in_kallsyms"></p>
 <p>​    找到syscall表后我们就可以用宏来查找对应的函数指针，比如<code>syscall_table[__NR_write]</code>，其中<code>__NR_write</code>就是系统写函数对应的下标。</p>
+<p><img src="/2022/07/20/Suterusu%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90-2/macro.png" srcset="/img/loading.gif" lazyload alt="宏"></p>
 <h3 id="0x02-hook函数"><a href="#0x02-hook函数" class="headerlink" title="0x02 hook函数"></a>0x02 hook函数</h3><p>​    hook函数即是将函数指针指向的内容进行改变，同时新函数与原始函数保持相同的参数列表。系统依然会调用函数指针，但每次都会执行的都是我们替换上去的新函数，在新函数内完成自己想要的动作之后，再回调原始函数来完成系统原本的操作。</p>
 <ul>
 <li>hook操作伪代码</li>
