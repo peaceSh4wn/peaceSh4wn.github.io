@@ -19,6 +19,7 @@
 <p>​    找到syscall表后我们就可以用宏来查找对应的函数指针，比如<code>syscall_table[__NR_write]</code>，其中<code>__NR_write</code>就是系统写函数对应的下标。</p>
 <p><img src="/2022/07/20/Suterusu%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90-2/macro.png" srcset="/img/loading.gif" lazyload alt="宏"></p>
 <h3 id="0x02-hook函数"><a href="#0x02-hook函数" class="headerlink" title="0x02 hook函数"></a>0x02 hook函数</h3><p>​    hook函数即是将函数指针指向的内容进行改变，同时新函数与原始函数保持相同的参数列表。系统依然会调用函数指针，但每次都会执行的都是我们替换上去的新函数，在新函数内完成自己想要的动作之后，再回调原始函数来完成系统原本的操作。</p>
+<p>​    这里hook函数使用了<strong>函数蹦床</strong>技术，因为如果直接通过修改函数指针，比如<code>symbol_table[__NR_write] = our_new_pointer</code>，这样直接将原来的系统函数指针替换成我们的新函数指针很容易被检测到。于是采用更改系统函数指针所指向内存的前几个字节，跳转到我们的新函数上来达到劫持效果。</p>
 <ul>
 <li>hook操作伪代码</li>
 </ul>
